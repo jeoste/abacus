@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/src/assets/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Abacus - Estimateur Talend</title>
+  <link rel="stylesheet" href="/src/styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="app">
+    <!-- Header avec glass effect -->
+    <header class="header">
+      <div class="header-content">
+        <div class="logo">
+          <svg width="32" height="32" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100" height="100" rx="20" fill="url(#gradient)"/>
+            <path d="M25 40h50l-25 35L25 40z" fill="white" opacity="0.9"/>
+            <circle cx="50" cy="30" r="8" fill="white"/>
+            <defs>
+              <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#667eea"/>
+                <stop offset="100%" style="stop-color:#764ba2"/>
+              </stop>
+            </defs>
+          </svg>
+          <span>Abacus</span>
+        </div>
+        
+        <div class="header-info">
+          <div class="status-indicator">
+            <div class="status-dot"></div>
+            <span>Système opérationnel</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenu principal -->
+    <div class="container">
+      <main class="main-content">
+        <section class="hero">
+          <h1 class="hero-title">
+            Estimateur de coûts
+            <span class="gradient-text">Talend</span>
+          </h1>
+          <p class="hero-subtitle">
+            Calculez précisément les coûts de vos flux de données
+          </p>
+        </section>
+
+        <!-- Gestion des flux -->
+        <section class="glass-panel">
+          <div class="panel-header">
+            <h2>Gestion des flux</h2>
+            <div class="panel-actions">
+              <div class="stats-summary">
+                <span class="stat-item">
+                  <strong id="totalInterfaces">0</strong> interfaces
+                </span>
+                <span class="stat-item">
+                  <strong id="totalFlows">0</strong> flux
+                </span>
+                <span class="stat-item">
+                  <strong id="totalCost">0</strong> jours
+                </span>
+              </div>
+              <div class="button-group">
+                <button id="addInterfaceBtn" class="btn btn-secondary">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="12" y1="8" x2="12" y2="16"></line>
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+                  </svg>
+                  Nouvelle interface
+                </button>
+                <button id="addFlowBtn" class="btn btn-primary">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                  </svg>
+                  Nouveau flux
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tableau des flux -->
+          <div class="table-container">
+            <table class="flows-table">
+              <thead>
+                <tr>
+                  <th>Interface / Flux</th>
+                  <th>Sources</th>
+                  <th>Cibles</th>
+                  <th>Transformations</th>
+                  <th>Type de flux</th>
+                  <th>Complexité</th>
+                  <th>Expertise</th>
+                  <th>Charge estimée (jours)</th>
+                  <th>Dernière modification</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="flowsTableBody">
+                <!-- Les flux seront ajoutés dynamiquement -->
+              </tbody>
+            </table>
+            <div id="emptyState" class="empty-state">
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14,2 14,8 20,8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10,9 9,9 8,9"></polyline>
+              </svg>
+              <p>Aucune interface créée</p>
+              <span>Cliquez sur "Nouvelle interface" pour commencer</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section statistiques et recommandations -->
+        <section class="stats-section">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M9 19v-6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm0 0V9a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v10m-6 0a2 2 0 0 0 2 2h2a2 2 0 0 0-2-2m0 0V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"></path>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <h3>Projets calculés</h3>
+                <div class="stat-value" id="projectsCount">127</div>
+                <div class="stat-change positive">+12% ce mois</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12,6 12,12 16,14"></polyline>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <h3>Temps moyen</h3>
+                <div class="stat-value">8.5j</div>
+                <div class="stat-change negative">-5% optimisé</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="12" y1="1" x2="12" y2="23"></line>
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <h3>Charge moyenne</h3>
+                <div class="stat-value">8.4j</div>
+                <div class="stat-change neutral">Stable</div>
+              </div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="22,12 18,12 15,21 9,3 6,12 2,12"></polyline>
+                </svg>
+              </div>
+              <div class="stat-content">
+                <h3>Précision</h3>
+                <div class="stat-value">94%</div>
+                <div class="stat-change positive">+2% amélioré</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recommandations -->
+          <div class="recommendations-card">
+            <h3>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+              Recommandations
+            </h3>
+            <div id="recommendationsList" class="recommendations-list">
+              <div class="recommendation-item">
+                <span class="recommendation-type">Optimisation</span>
+                <p>Considérez la consolidation des sources multiples pour réduire la complexité</p>
+              </div>
+              <div class="recommendation-item">
+                <span class="recommendation-type">Performance</span>
+                <p>Les flux quotidiens avec gros volumes bénéficieraient d'optimisations spécifiques</p>
+              </div>
+              <div class="recommendation-item">
+                <span class="recommendation-type">Charge</span>
+                <p>Une approche par phases pourrait réduire les risques sur les projets de plus de 20 jours</p>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- Modal pour créer/éditer une interface -->
+    <div id="interfaceModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="interfaceModalTitle">Nouvelle interface</h3>
+          <button id="closeInterfaceModal" class="btn-close">×</button>
+        </div>
+        
+        <form id="interfaceForm">
+          <div class="form-group">
+            <label for="interfaceName">Nom de l'interface *</label>
+            <input type="text" id="interfaceName" name="interfaceName" required placeholder="ex: Interface CRM to ERP">
+          </div>
+
+          <div class="form-group">
+            <label for="interfaceDescription">Description (optionnel)</label>
+            <textarea id="interfaceDescription" name="interfaceDescription" rows="3" placeholder="Description de l'interface et de ses objectifs"></textarea>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" id="cancelInterfaceBtn" class="btn btn-secondary">Annuler</button>
+            <button type="submit" class="btn btn-primary">
+              <span id="interfaceSubmitText">Créer l'interface</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modal pour créer/éditer un flux -->
+    <div id="flowModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Nouveau flux</h3>
+          <button id="closeModal" class="btn-close">×</button>
+        </div>
+        
+        <form id="flowForm">
+          <div class="form-group">
+            <label for="flowInterface">Interface parente</label>
+            <select id="flowInterface" name="flowInterface">
+              <option value="">Aucune interface (flux autonome)</option>
+              <!-- Les interfaces seront ajoutées dynamiquement -->
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="flowName">Nom du flux *</label>
+            <input type="text" id="flowName" name="flowName" required placeholder="ex: Flux CRM to PIVOT">
+          </div>
+
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="sources">Nombre de sources *</label>
+              <input type="number" id="sources" name="sources" min="1" max="20" value="1" required>
+            </div>
+
+            <div class="form-group">
+              <label for="targets">Nombre de cibles *</label>
+              <input type="number" id="targets" name="targets" min="1" max="20" value="1" required>
+            </div>
+
+            <div class="form-group">
+              <label for="transformations">Transformations</label>
+              <input type="number" id="transformations" name="transformations" min="0" max="50" value="0">
+            </div>
+
+            <div class="form-group">
+              <label for="complexity">Complexité</label>
+              <select id="complexity" name="complexity">
+                <option value="simple">Simple</option>
+                <option value="modérée" selected>Modérée</option>
+                <option value="complexe">Complexe</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="userLevel">Niveau d'expertise</label>
+              <select id="userLevel" name="userLevel">
+                <option value="junior">👶 Junior (0-2 ans) - +50% temps</option>
+                <option value="confirmé" selected>⚡ Confirmé (2-5 ans) - Temps standard</option>
+                <option value="expert">🚀 Expert (5+ ans) - -20% temps</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Options avancées -->
+          <details class="advanced-options">
+            <summary>Options avancées</summary>
+            <div class="advanced-grid">
+              <div class="form-group">
+                <label for="dataVolume">Volume de données (MB)</label>
+                <input type="number" id="dataVolume" name="dataVolume" min="1" value="100">
+              </div>
+              <div class="form-group">
+                <label for="frequency">Fréquence</label>
+                <select id="frequency" name="frequency">
+                  <option value="unique">Unique</option>
+                  <option value="quotidien" selected>Quotidien</option>
+                  <option value="hebdomadaire">Hebdomadaire</option>
+                  <option value="mensuel">Mensuel</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="environment">Environnement</label>
+                <select id="environment" name="environment">
+                  <option value="dev">Développement</option>
+                  <option value="test">Test</option>
+                  <option value="prod" selected>Production</option>
+                </select>
+              </div>
+            </div>
+          </details>
+
+          <!-- Configuration des flux -->
+          <details class="advanced-options">
+            <summary>Configuration des flux</summary>
+            <div class="advanced-grid">
+              <div class="form-group">
+                <label for="maxTranscodifications">Nombre maximum de transcodifications</label>
+                <input type="number" id="maxTranscodifications" name="maxTranscodifications" min="0" max="100" value="0">
+              </div>
+              <div class="form-group">
+                <label for="maxSources">Nombre maximum de sources</label>
+                <input type="number" id="maxSources" name="maxSources" min="1" max="50" value="1">
+              </div>
+              <div class="form-group">
+                <label for="maxTargets">Nombre maximum de cibles</label>
+                <input type="number" id="maxTargets" name="maxTargets" min="1" max="50" value="1">
+              </div>
+              <div class="form-group">
+                <label for="maxRules">Nombre maximum de règles (gestion/métier)</label>
+                <input type="number" id="maxRules" name="maxRules" min="0" max="100" value="0">
+              </div>
+              <div class="form-group">
+                <label for="flowType">Type de flux</label>
+                <select id="flowType" name="flowType">
+                  <option value="synchrone" selected>Synchrone (S)</option>
+                  <option value="asynchrone">Asynchrone (A)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="architecturePivot" name="architecturePivot">
+                  <span class="checkmark"></span>
+                  Architecture pivot
+                </label>
+              </div>
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="messagingQueue" name="messagingQueue">
+                  <span class="checkmark"></span>
+                  Messaging queue
+                </label>
+              </div>
+            </div>
+          </details>
+
+          <!-- Gestion des erreurs et logs -->
+          <details class="advanced-options">
+            <summary>Gestion des erreurs et logs</summary>
+            <div class="advanced-grid">
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="gestionErreurstechniques" name="gestionErreurstechniques">
+                  <span class="checkmark"></span>
+                  Gestion des erreurs techniques
+                </label>
+              </div>
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="gestionErreursFonctionnelles" name="gestionErreursFonctionnelles">
+                  <span class="checkmark"></span>
+                  Gestion des erreurs fonctionnelles
+                </label>
+              </div>
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input type="checkbox" id="gestionLogs" name="gestionLogs">
+                  <span class="checkmark"></span>
+                  Gestion des logs
+                </label>
+              </div>
+            </div>
+          </details>
+
+          <div class="modal-actions">
+            <button type="button" id="cancelBtn" class="btn btn-secondary">Annuler</button>
+            <button type="submit" class="btn btn-primary">
+              <span id="submitText">Créer le flux</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Overlay pour le modal -->
+    <div id="modalOverlay" class="modal-overlay"></div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
