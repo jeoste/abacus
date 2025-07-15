@@ -23,7 +23,7 @@
             <circle cx="50" cy="30" r="8" fill="white"/>
             <defs>
               <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#667eea"/>
+                <stop offset="0%" style="stop-color:#307ddc"/>
                 <stop offset="100%" style="stop-color:#764ba2"/>
               </stop>
             </defs>
@@ -45,11 +45,11 @@
       <main class="main-content">
         <section class="hero">
           <h1 class="hero-title">
-            Estimateur de coûts
-            <span class="gradient-text">Talend</span>
+            Abaques 
+            <span class="gradient-text">Data</span>
           </h1>
           <p class="hero-subtitle">
-            Calculez précisément les coûts de vos flux de données
+            Calculez de façon macro la charge de vos flux de données
           </p>
         </section>
 
@@ -94,15 +94,18 @@
             <table class="flows-table">
               <thead>
                 <tr>
-                  <th>Interface / Flux</th>
+                  <th>Technologie</th>
+                  <th>Client</th>
+                  <th>Interface</th>
+                  <th>Flux</th>
                   <th>Sources</th>
                   <th>Cibles</th>
                   <th>Transformations</th>
+                  <th>Opération</th>
                   <th>Type de flux</th>
                   <th>Complexité</th>
                   <th>Expertise</th>
-                  <th>Charge estimée (jours)</th>
-                  <th>Dernière modification</th>
+                  <th>Estimation (jours)</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -207,6 +210,7 @@
               </div>
             </div>
           </div>
+          <div id="flowDetailsContainer"></div>
         </section>
       </main>
     </div>
@@ -248,36 +252,49 @@
           <button id="closeModal" class="btn-close">×</button>
         </div>
         
-        <form id="flowForm">
-          <div class="form-group">
-            <label for="flowInterface">Interface parente</label>
-            <select id="flowInterface" name="flowInterface">
-              <option value="">Aucune interface (flux autonome)</option>
-              <!-- Les interfaces seront ajoutées dynamiquement -->
-            </select>
-          </div>
+        <div class="tabs">
+          <button type="button" class="tab-btn active" id="tabDataBtn">Données</button>
+          <button type="button" class="tab-btn" id="tabCommentsBtn">Commentaires</button>
+        </div>
+        <div id="tabData" class="tab-content active">
+          <form id="flowForm">
+            <div class="form-section-title">Informations principales</div>
+            <div class="form-group">
+              <label for="flowTech">Technologie</label>
+              <select id="flowTech" name="flowTech" required>
+                <option value="Talend">Talend</option>
+                <option value="Blueway">Blueway</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="flowClient">Client</label>
+              <input type="text" id="flowClient" name="flowClient" placeholder="ex: Meta, Amazon, etc.">
+            </div>
+            <div class="form-group">
+              <label for="flowInterface">Interface parente</label>
+              <input type="text" id="flowInterface" name="flowInterface" list="interfaceList" placeholder="ex: Interface n°1 (CRM-ERP)">
+              <datalist id="interfaceList">
+                <!-- Les interfaces seront ajoutées dynamiquement -->
+              </datalist>
+            </div>
+            <div class="form-group">
+              <label for="flowName">Nom du flux *</label>
+              <input type="text" id="flowName" name="flowName" required placeholder="ex: Salesforce vers Base de données">
+            </div>
 
-          <div class="form-group">
-            <label for="flowName">Nom du flux *</label>
-            <input type="text" id="flowName" name="flowName" required placeholder="ex: Flux CRM to PIVOT">
-          </div>
-
-          <div class="form-grid">
+            <div class="form-section-title">Caractéristiques</div>
             <div class="form-group">
               <label for="sources">Nombre de sources *</label>
               <input type="number" id="sources" name="sources" min="1" max="20" value="1" required>
             </div>
-
             <div class="form-group">
               <label for="targets">Nombre de cibles *</label>
               <input type="number" id="targets" name="targets" min="1" max="20" value="1" required>
             </div>
-
             <div class="form-group">
               <label for="transformations">Transformations</label>
               <input type="number" id="transformations" name="transformations" min="0" max="50" value="0">
             </div>
-
             <div class="form-group">
               <label for="complexity">Complexité</label>
               <select id="complexity" name="complexity">
@@ -286,124 +303,125 @@
                 <option value="complexe">Complexe</option>
               </select>
             </div>
-
             <div class="form-group">
               <label for="userLevel">Niveau d'expertise</label>
               <select id="userLevel" name="userLevel">
-                <option value="junior">👶 Junior (0-2 ans) - +50% temps</option>
-                <option value="confirmé" selected>⚡ Confirmé (2-5 ans) - Temps standard</option>
-                <option value="expert">🚀 Expert (5+ ans) - -20% temps</option>
+                <option value="junior">👶 Junior (0-2 ans)</option>
+                <option value="confirmé" selected>⚡ Confirmé (2-5 ans)</option>
+                <option value="expert">🚀 Expert (5+ ans)</option>
               </select>
             </div>
+            <div class="form-group">
+              <label for="typeFlux">Type de flux</label>
+              <select id="typeFlux" name="typeFlux">
+                <option value="job ETL">Job ETL</option>
+                <option value="route">Route</option>
+                <option value="data service">Data service</option>
+                <option value="joblet">Joblet</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="flowType">Opération</label>
+              <select id="flowType" name="flowType">
+                <option value="synchrone" selected>Synchrone (S)</option>
+                <option value="asynchrone">Asynchrone (A)</option>
+              </select>
+            </div>
+
+            <div class="form-section-title">Options avancées</div>
+            <div class="form-group">
+              <label for="dataVolume">Volume de données (MB)</label>
+              <input type="number" id="dataVolume" name="dataVolume" min="1" value="100">
+            </div>
+            <div class="form-group">
+              <label for="frequency">Fréquence</label>
+              <select id="frequency" name="frequency">
+                <option value="unique">Unique</option>
+                <option value="quotidien" selected>Quotidien</option>
+                <option value="hebdomadaire">Hebdomadaire</option>
+                <option value="mensuel">Mensuel</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="environment">Environnement</label>
+              <select id="environment" name="environment">
+                <option value="dev">Développement</option>
+                <option value="test">Test</option>
+                <option value="prod" selected>Production</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="maxTranscodifications">Nombre maximum de transcodifications</label>
+              <input type="number" id="maxTranscodifications" name="maxTranscodifications" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+              <label for="maxSources">Nombre maximum de source(s)</label>
+              <input type="number" id="maxSources" name="maxSources" min="1" max="50" value="1">
+            </div>
+            <div class="form-group">
+              <label for="maxTargets">Nombre maximum de cible(s)</label>
+              <input type="number" id="maxTargets" name="maxTargets" min="1" max="50" value="1">
+            </div>
+            <div class="form-group">
+              <label for="maxRules">Nombre maximum de règles (gestion/métier)</label>
+              <input type="number" id="maxRules" name="maxRules" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+              <label for="contractCompleteness">Complétude du contrat d'interface (%)</label>
+              <input type="number" id="contractCompleteness" name="contractCompleteness" min="0" max="100" value="100" required>
+              <small>Indiquez le pourcentage de complétude du contrat d'interface (0 à 100)</small>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="architecturePivot" name="architecturePivot">
+                <span class="checkmark"></span>
+                Architecture pivot
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="messagingQueue" name="messagingQueue">
+                <span class="checkmark"></span>
+                Messaging queue
+              </label>
+            </div>
+
+            <div class="form-section-title">Gestion des erreurs et logs</div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="gestionErreurstechniques" name="gestionErreurstechniques">
+                <span class="checkmark"></span>
+                Gestion des erreurs techniques
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="gestionErreursFonctionnelles" name="gestionErreursFonctionnelles">
+                <span class="checkmark"></span>
+                Gestion des erreurs fonctionnelles
+              </label>
+            </div>
+            <div class="form-group">
+              <label class="checkbox-label">
+                <input type="checkbox" id="gestionLogs" name="gestionLogs">
+                <span class="checkmark"></span>
+                Gestion des logs
+              </label>
+            </div>
+            <div class="modal-actions">
+              <button type="button" id="cancelBtn" class="btn btn-secondary">Annuler</button>
+              <button type="submit" class="btn btn-primary">
+                <span id="submitText">Créer le flux</span>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div id="tabComments" class="tab-content" style="display:none;">
+          <div class="form-group">
+            <label for="flowComments">Commentaires détaillés sur l'abaque</label>
+            <textarea id="flowComments" name="flowComments" rows="6" placeholder="Ajoutez ici vos remarques, hypothèses, justifications, etc."></textarea>
           </div>
-
-          <!-- Options avancées -->
-          <details class="advanced-options">
-            <summary>Options avancées</summary>
-            <div class="advanced-grid">
-              <div class="form-group">
-                <label for="dataVolume">Volume de données (MB)</label>
-                <input type="number" id="dataVolume" name="dataVolume" min="1" value="100">
-              </div>
-              <div class="form-group">
-                <label for="frequency">Fréquence</label>
-                <select id="frequency" name="frequency">
-                  <option value="unique">Unique</option>
-                  <option value="quotidien" selected>Quotidien</option>
-                  <option value="hebdomadaire">Hebdomadaire</option>
-                  <option value="mensuel">Mensuel</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label for="environment">Environnement</label>
-                <select id="environment" name="environment">
-                  <option value="dev">Développement</option>
-                  <option value="test">Test</option>
-                  <option value="prod" selected>Production</option>
-                </select>
-              </div>
-            </div>
-          </details>
-
-          <!-- Configuration des flux -->
-          <details class="advanced-options">
-            <summary>Configuration des flux</summary>
-            <div class="advanced-grid">
-              <div class="form-group">
-                <label for="maxTranscodifications">Nombre maximum de transcodifications</label>
-                <input type="number" id="maxTranscodifications" name="maxTranscodifications" min="0" max="100" value="0">
-              </div>
-              <div class="form-group">
-                <label for="maxSources">Nombre maximum de sources</label>
-                <input type="number" id="maxSources" name="maxSources" min="1" max="50" value="1">
-              </div>
-              <div class="form-group">
-                <label for="maxTargets">Nombre maximum de cibles</label>
-                <input type="number" id="maxTargets" name="maxTargets" min="1" max="50" value="1">
-              </div>
-              <div class="form-group">
-                <label for="maxRules">Nombre maximum de règles (gestion/métier)</label>
-                <input type="number" id="maxRules" name="maxRules" min="0" max="100" value="0">
-              </div>
-              <div class="form-group">
-                <label for="flowType">Type de flux</label>
-                <select id="flowType" name="flowType">
-                  <option value="synchrone" selected>Synchrone (S)</option>
-                  <option value="asynchrone">Asynchrone (A)</option>
-                </select>
-              </div>
-              <div class="form-group">
-                <label class="checkbox-label">
-                  <input type="checkbox" id="architecturePivot" name="architecturePivot">
-                  <span class="checkmark"></span>
-                  Architecture pivot
-                </label>
-              </div>
-              <div class="form-group">
-                <label class="checkbox-label">
-                  <input type="checkbox" id="messagingQueue" name="messagingQueue">
-                  <span class="checkmark"></span>
-                  Messaging queue
-                </label>
-              </div>
-            </div>
-          </details>
-
-          <!-- Gestion des erreurs et logs -->
-          <details class="advanced-options">
-            <summary>Gestion des erreurs et logs</summary>
-            <div class="advanced-grid">
-              <div class="form-group">
-                <label class="checkbox-label">
-                  <input type="checkbox" id="gestionErreurstechniques" name="gestionErreurstechniques">
-                  <span class="checkmark"></span>
-                  Gestion des erreurs techniques
-                </label>
-              </div>
-              <div class="form-group">
-                <label class="checkbox-label">
-                  <input type="checkbox" id="gestionErreursFonctionnelles" name="gestionErreursFonctionnelles">
-                  <span class="checkmark"></span>
-                  Gestion des erreurs fonctionnelles
-                </label>
-              </div>
-              <div class="form-group">
-                <label class="checkbox-label">
-                  <input type="checkbox" id="gestionLogs" name="gestionLogs">
-                  <span class="checkmark"></span>
-                  Gestion des logs
-                </label>
-              </div>
-            </div>
-          </details>
-
-          <div class="modal-actions">
-            <button type="button" id="cancelBtn" class="btn btn-secondary">Annuler</button>
-            <button type="submit" class="btn btn-primary">
-              <span id="submitText">Créer le flux</span>
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </div>
 
@@ -412,5 +430,32 @@
   </div>
 
   <script type="module" src="/src/main.ts"></script>
+  <script>
+    // Gestion des onglets du modal flux
+    document.addEventListener('DOMContentLoaded', function() {
+      const tabDataBtn = document.getElementById('tabDataBtn');
+      const tabCommentsBtn = document.getElementById('tabCommentsBtn');
+      const tabData = document.getElementById('tabData');
+      const tabComments = document.getElementById('tabComments');
+      if(tabDataBtn && tabCommentsBtn && tabData && tabComments) {
+        tabDataBtn.addEventListener('click', function() {
+          tabDataBtn.classList.add('active');
+          tabCommentsBtn.classList.remove('active');
+          tabData.classList.add('active');
+          tabData.style.display = '';
+          tabComments.classList.remove('active');
+          tabComments.style.display = 'none';
+        });
+        tabCommentsBtn.addEventListener('click', function() {
+          tabCommentsBtn.classList.add('active');
+          tabDataBtn.classList.remove('active');
+          tabComments.classList.add('active');
+          tabComments.style.display = '';
+          tabData.classList.remove('active');
+          tabData.style.display = 'none';
+        });
+      }
+    });
+  </script>
 </body>
 </html>

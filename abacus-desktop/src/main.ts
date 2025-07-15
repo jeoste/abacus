@@ -7,9 +7,13 @@ interface Interface {
   updatedAt: Date;
 }
 
+const TYPE_FLUX_LIST = ['job ETL', 'route', 'data service', 'joblet'] as const;
+type TypeFlux = typeof TYPE_FLUX_LIST[number];
+
 interface Flow {
   id: string;
   name: string;
+  client?: string; // Nom du client pour ce flux
   interfaceId?: string; // Référence vers l'interface parente
   sources: number;
   targets: number;
@@ -19,6 +23,7 @@ interface Flow {
   dataVolume: number;
   frequency: 'unique' | 'quotidien' | 'hebdomadaire' | 'mensuel';
   environment: 'dev' | 'test' | 'prod';
+  tech: 'Talend' | 'Blueway'; // Technologie du flux
   // Nouveaux paramètres de configuration
   maxTranscodifications: number;
   maxSources: number;
@@ -34,6 +39,9 @@ interface Flow {
   cost?: number;
   createdAt: Date;
   updatedAt: Date;
+  typeFlux?: TypeFlux;
+  contractCompleteness: number; // Pourcentage de complétude du contrat d'interface
+  comments?: string; // Commentaires détaillés sur l'abaque
 }
 
 interface CalculationResult {
@@ -91,12 +99,142 @@ class FlowManager {
         this.interfaces = [];
       }
     }
+
+    // Ajout de données d'exemple si aucune donnée n'existe
+    if (this.interfaces.length === 0 && this.flows.length === 0) {
+      this.initializeSampleData();
+    }
+  }
+
+  private initializeSampleData(): void {
+    console.log('Initialisation des données d\'exemple...');
+    
+    // Créer des interfaces d'exemple
+    const interface1 = this.addInterface({
+      name: 'Interface CRM-ERP',
+      description: 'Synchronisation des données clients entre CRM et ERP'
+    });
+
+    const interface2 = this.addInterface({
+      name: 'Interface Data Lake',
+      description: 'Alimentation du data lake avec les données transactionnelles'
+    });
+
+    // Créer des flux d'exemple
+    this.addFlow({
+      name: 'Export clients quotidien',
+      interfaceId: interface1.id,
+      sources: 3,
+      targets: 2,
+      transformations: 5,
+      complexity: 'modérée',
+      userLevel: 'confirmé',
+      dataVolume: 10000,
+      frequency: 'quotidien',
+      environment: 'prod',
+      tech: 'Talend',
+      maxTranscodifications: 3,
+      maxSources: 5,
+      maxTargets: 3,
+      maxRules: 10,
+      flowType: 'asynchrone',
+      architecturePivot: true,
+      messagingQueue: false,
+      gestionErreurstechniques: true,
+      gestionErreursFonctionnelles: true,
+      gestionLogs: true,
+      contractCompleteness: 100,
+      comments: ''
+    });
+
+    this.addFlow({
+      name: 'Import commandes temps réel',
+      interfaceId: interface1.id,
+      sources: 1,
+      targets: 3,
+      transformations: 8,
+      complexity: 'complexe',
+      userLevel: 'expert',
+      dataVolume: 50000,
+      frequency: 'quotidien',
+      environment: 'prod',
+      tech: 'Talend',
+      maxTranscodifications: 5,
+      maxSources: 2,
+      maxTargets: 4,
+      maxRules: 15,
+      flowType: 'synchrone',
+      architecturePivot: false,
+      messagingQueue: true,
+      gestionErreurstechniques: true,
+      gestionErreursFonctionnelles: false,
+      gestionLogs: true,
+      contractCompleteness: 80,
+      comments: ''
+    });
+
+    this.addFlow({
+      name: 'Agrégation données analytics',
+      interfaceId: interface2.id,
+      sources: 6,
+      targets: 1,
+      transformations: 12,
+      complexity: 'complexe',
+      userLevel: 'confirmé',
+      dataVolume: 100000,
+      frequency: 'quotidien',
+      environment: 'prod',
+      tech: 'Blueway',
+      maxTranscodifications: 8,
+      maxSources: 8,
+      maxTargets: 2,
+      maxRules: 20,
+      flowType: 'asynchrone',
+      architecturePivot: true,
+      messagingQueue: false,
+      gestionErreurstechniques: true,
+      gestionErreursFonctionnelles: true,
+      gestionLogs: true,
+      contractCompleteness: 90,
+      comments: ''
+    });
+
+    this.addFlow({
+      name: 'Flux de test simple',
+      sources: 1,
+      targets: 1,
+      transformations: 2,
+      complexity: 'simple',
+      userLevel: 'junior',
+      dataVolume: 1000,
+      frequency: 'hebdomadaire',
+      environment: 'test',
+      tech: 'Talend',
+      maxTranscodifications: 1,
+      maxSources: 2,
+      maxTargets: 2,
+      maxRules: 3,
+      flowType: 'synchrone',
+      architecturePivot: false,
+      messagingQueue: false,
+      gestionErreurstechniques: false,
+      gestionErreursFonctionnelles: false,
+      gestionLogs: true,
+      contractCompleteness: 60,
+      comments: ''
+    });
+
+    console.log('Données d\'exemple créées avec succès');
   }
 
   private saveData(): void {
     try {
       localStorage.setItem('talend-flows', JSON.stringify(this.flows));
       localStorage.setItem('talend-interfaces', JSON.stringify(this.interfaces));
+      console.log('Données sauvegardées avec succès:', {
+        flows: this.flows.length,
+        interfaces: this.interfaces.length
+      });
     } catch (error) {
       console.error('Erreur lors de la sauvegarde:', error);
     }
@@ -221,6 +359,19 @@ class FlowManager {
 
   getCurrentEditingId(): string | null {
     return this.currentEditingId;
+  }
+
+  // Vérification d'unicité des noms
+  isInterfaceNameUnique(name: string, excludeId?: string): boolean {
+    return !this.interfaces.some(interfaceItem => 
+      interfaceItem.name.toLowerCase() === name.toLowerCase() && interfaceItem.id !== excludeId
+    );
+  }
+
+  isFlowNameUnique(name: string, excludeId?: string): boolean {
+    return !this.flows.some(flow => 
+      flow.name.toLowerCase() === name.toLowerCase() && flow.id !== excludeId
+    );
   }
 }
 
@@ -380,6 +531,10 @@ class FlowUI {
     this.tableBody = document.getElementById('flowsTableBody')!;
     this.emptyState = document.getElementById('emptyState')!;
 
+    console.log('FlowUI initialisé');
+    console.log('Nombre d\'interfaces:', this.flowManager.getAllInterfaces().length);
+    console.log('Nombre de flux:', this.flowManager.getAllFlows().length);
+
     this.initializeEventListeners();
     this.recalculateAllFlows(); // Recalculer tous les flux avec la nouvelle formule
     this.renderTable();
@@ -454,9 +609,53 @@ class FlowUI {
         }
       }
     });
+
+    // Ajout du listener pour le bouton de création rapide d'interface dans le formulaire de flux
+    const quickAddInterfaceBtn = document.getElementById('quickAddInterfaceBtn');
+    if (quickAddInterfaceBtn) {
+      quickAddInterfaceBtn.addEventListener('click', () => {
+        this.openInterfaceModal();
+      });
+    }
+
+    // Délégation d'événements pour les boutons d'action du tableau
+    this.tableBody.addEventListener('click', (e) => {
+      const button = (e.target as Element).closest('.action-btn');
+      if (!button) return;
+
+      const action = button.getAttribute('data-action');
+      const id = button.getAttribute('data-id');
+      
+      if (!action || !id) return;
+
+      e.preventDefault();
+      e.stopPropagation();
+
+      switch (action) {
+        case 'edit-interface':
+          this.editInterface(id);
+          break;
+        case 'delete-interface':
+          this.deleteInterface(id);
+          break;
+        case 'edit-flow':
+          this.editFlow(id);
+          break;
+        case 'delete-flow':
+          this.deleteFlow(id);
+          break;
+        case 'duplicate-flow':
+          this.duplicateFlow(id);
+          break;
+        default:
+          console.warn('Action non reconnue:', action);
+      }
+    });
   }
 
   private openInterfaceModal(interfaceId?: string): void {
+    this.flowManager.setCurrentEditingId(interfaceId || null);
+    
     if (interfaceId) {
       // Mode édition
       const interfaceItem = this.flowManager.getInterface(interfaceId);
@@ -487,6 +686,7 @@ class FlowUI {
       this.modalOverlay.classList.remove('active');
       document.body.style.overflow = '';
     }
+    this.flowManager.setCurrentEditingId(null);
   }
 
   private populateInterfaceForm(interfaceItem: Interface): void {
@@ -496,12 +696,36 @@ class FlowUI {
 
   private handleInterfaceFormSubmit(): void {
     const formData = new FormData(this.interfaceForm);
-    const interfaceData = {
-      name: formData.get('interfaceName') as string,
-      description: formData.get('interfaceDescription') as string || undefined
-    };
+    
+    // Validation des données
+    const name = (formData.get('interfaceName') as string)?.trim();
+    if (!name) {
+      alert('Le nom de l\'interface est obligatoire');
+      return;
+    }
 
-    this.flowManager.addInterface(interfaceData);
+    // Vérifier si on est en mode édition
+    const editingId = this.flowManager.getCurrentEditingId();
+    
+    // Vérification d'unicité du nom
+    if (!this.flowManager.isInterfaceNameUnique(name, editingId || undefined)) {
+      alert('Ce nom d\'interface existe déjà. Veuillez choisir un nom unique.');
+      return;
+    }
+    
+    const interfaceData = {
+      name,
+      description: (formData.get('interfaceDescription') as string)?.trim() || undefined
+    };
+    
+    if (editingId) {
+      // Mise à jour
+      this.flowManager.updateInterface(editingId, interfaceData);
+    } else {
+      // Création
+      this.flowManager.addInterface(interfaceData);
+    }
+
     this.closeInterfaceModal();
     this.renderTable();
     this.updateStats();
@@ -509,20 +733,17 @@ class FlowUI {
   }
 
   private updateInterfaceOptions(): void {
-    const select = document.getElementById('flowInterface') as HTMLSelectElement;
+    const datalist = document.getElementById('interfaceList') as HTMLDataListElement;
     const interfaces = this.flowManager.getAllInterfaces();
-    
-    // Vider les options existantes (sauf la première)
-    while (select.children.length > 1) {
-      select.removeChild(select.lastChild!);
+    // Vider les options existantes
+    while (datalist.firstChild) {
+      datalist.removeChild(datalist.firstChild);
     }
-
     // Ajouter les nouvelles options
     interfaces.forEach(interfaceItem => {
       const option = document.createElement('option');
-      option.value = interfaceItem.id;
-      option.textContent = interfaceItem.name;
-      select.appendChild(option);
+      option.value = interfaceItem.name;
+      datalist.appendChild(option);
     });
   }
 
@@ -566,6 +787,7 @@ class FlowUI {
 
   private populateForm(flow: Flow): void {
     (document.getElementById('flowInterface') as HTMLSelectElement).value = flow.interfaceId || '';
+    (document.getElementById('flowClient') as HTMLInputElement).value = flow.client || '';
     (document.getElementById('flowName') as HTMLInputElement).value = flow.name;
     (document.getElementById('sources') as HTMLInputElement).value = flow.sources.toString();
     (document.getElementById('targets') as HTMLInputElement).value = flow.targets.toString();
@@ -575,6 +797,8 @@ class FlowUI {
     (document.getElementById('frequency') as HTMLSelectElement).value = flow.frequency;
     (document.getElementById('environment') as HTMLSelectElement).value = flow.environment;
     (document.getElementById('userLevel') as HTMLSelectElement).value = flow.userLevel || 'confirmé';
+    (document.getElementById('typeFlux') as HTMLSelectElement).value = flow.typeFlux || 'job ETL';
+    (document.getElementById('flowTech') as HTMLSelectElement).value = flow.tech || 'Talend';
     
     // Nouveaux paramètres de configuration
     (document.getElementById('maxTranscodifications') as HTMLInputElement).value = flow.maxTranscodifications?.toString() || '0';
@@ -589,60 +813,99 @@ class FlowUI {
     (document.getElementById('gestionErreurstechniques') as HTMLInputElement).checked = flow.gestionErreurstechniques || false;
     (document.getElementById('gestionErreursFonctionnelles') as HTMLInputElement).checked = flow.gestionErreursFonctionnelles || false;
     (document.getElementById('gestionLogs') as HTMLInputElement).checked = flow.gestionLogs || false;
+    (document.getElementById('contractCompleteness') as HTMLInputElement).value = flow.contractCompleteness?.toString() || '0';
+    (document.getElementById('comments') as HTMLTextAreaElement).value = flow.comments || '';
   }
 
   private handleFormSubmit(): void {
-    const formData = new FormData(this.form);
+    console.log('handleFormSubmit appelé');
+    const interfaceName = (this.form.elements.namedItem('flowInterface') as HTMLInputElement).value.trim();
+    let interfaceId: string | undefined = undefined;
+    if (interfaceName) {
+      const found = this.flowManager.getAllInterfaces().find(i => i.name === interfaceName);
+      if (found) {
+        interfaceId = found.id;
+      } else {
+        // Créer l'interface automatiquement
+        const newInterface = this.flowManager.addInterface({ name: interfaceName });
+        interfaceId = newInterface.id;
+        this.updateInterfaceOptions();
+      }
+    }
+    const typeFlux = (this.form.elements.namedItem('typeFlux') as HTMLSelectElement)?.value as TypeFlux | undefined;
     const flowData = {
-      name: formData.get('flowName') as string,
-      interfaceId: (formData.get('flowInterface') as string) || undefined,
-      sources: parseInt(formData.get('sources') as string),
-      targets: parseInt(formData.get('targets') as string),
-      transformations: parseInt(formData.get('transformations') as string),
-      complexity: formData.get('complexity') as 'simple' | 'modérée' | 'complexe',
-      dataVolume: parseInt(formData.get('dataVolume') as string),
-      frequency: formData.get('frequency') as 'unique' | 'quotidien' | 'hebdomadaire' | 'mensuel',
-      environment: formData.get('environment') as 'dev' | 'test' | 'prod',
-      userLevel: formData.get('userLevel') as 'junior' | 'confirmé' | 'expert',
-      // Nouveaux paramètres de configuration
-      maxTranscodifications: parseInt(formData.get('maxTranscodifications') as string) || 0,
-      maxSources: parseInt(formData.get('maxSources') as string) || 1,
-      maxTargets: parseInt(formData.get('maxTargets') as string) || 1,
-      maxRules: parseInt(formData.get('maxRules') as string) || 0,
-      flowType: formData.get('flowType') as 'synchrone' | 'asynchrone',
-      architecturePivot: formData.get('architecturePivot') === 'on',
-      messagingQueue: formData.get('messagingQueue') === 'on',
-      // Gestion des erreurs et logs
-      gestionErreurstechniques: formData.get('gestionErreurstechniques') === 'on',
-      gestionErreursFonctionnelles: formData.get('gestionErreursFonctionnelles') === 'on',
-      gestionLogs: formData.get('gestionLogs') === 'on'
+      name: (this.form.elements.namedItem('flowName') as HTMLInputElement).value.trim(),
+      client: (this.form.elements.namedItem('flowClient') as HTMLInputElement).value.trim() || undefined,
+      interfaceId,
+      sources: parseInt((this.form.elements.namedItem('sources') as HTMLInputElement).value) || 1,
+      targets: parseInt((this.form.elements.namedItem('targets') as HTMLInputElement).value) || 1,
+      transformations: parseInt((this.form.elements.namedItem('transformations') as HTMLInputElement).value) || 0,
+      complexity: (this.form.elements.namedItem('complexity') as HTMLSelectElement).value as 'simple' | 'modérée' | 'complexe',
+      dataVolume: parseInt((this.form.elements.namedItem('dataVolume') as HTMLInputElement).value) || 100,
+      frequency: (this.form.elements.namedItem('frequency') as HTMLSelectElement).value as 'unique' | 'quotidien' | 'hebdomadaire' | 'mensuel',
+      environment: (this.form.elements.namedItem('environment') as HTMLSelectElement).value as 'dev' | 'test' | 'prod',
+      userLevel: (this.form.elements.namedItem('userLevel') as HTMLSelectElement).value as 'junior' | 'confirmé' | 'expert',
+      typeFlux,
+      tech: (this.form.elements.namedItem('flowTech') as HTMLSelectElement).value as 'Talend' | 'Blueway',
+      maxTranscodifications: parseInt((this.form.elements.namedItem('maxTranscodifications') as HTMLInputElement).value) || 0,
+      maxSources: parseInt((this.form.elements.namedItem('maxSources') as HTMLInputElement).value) || 1,
+      maxTargets: parseInt((this.form.elements.namedItem('maxTargets') as HTMLInputElement).value) || 1,
+      maxRules: parseInt((this.form.elements.namedItem('maxRules') as HTMLInputElement).value) || 0,
+      flowType: (this.form.elements.namedItem('flowType') as HTMLSelectElement).value as 'synchrone' | 'asynchrone',
+      architecturePivot: (this.form.elements.namedItem('architecturePivot') as HTMLInputElement).checked,
+      messagingQueue: (this.form.elements.namedItem('messagingQueue') as HTMLInputElement).checked,
+      gestionErreurstechniques: (this.form.elements.namedItem('gestionErreurstechniques') as HTMLInputElement).checked,
+      gestionErreursFonctionnelles: (this.form.elements.namedItem('gestionErreursFonctionnelles') as HTMLInputElement).checked,
+      gestionLogs: (this.form.elements.namedItem('gestionLogs') as HTMLInputElement).checked,
+      contractCompleteness: parseInt((this.form.elements.namedItem('contractCompleteness') as HTMLInputElement).value) || 0,
+      comments: (this.form.elements.namedItem('comments') as HTMLTextAreaElement).value.trim() || undefined
     };
 
+    console.log('Nom du flux:', flowData.name);
+    if (!flowData.name) {
+      alert('Le nom du flux est obligatoire');
+      return;
+    }
+    
     const editingId = this.flowManager.getCurrentEditingId();
+    // Vérification d'unicité du nom uniquement à la création
+    if (!editingId && !this.flowManager.isFlowNameUnique(flowData.name)) {
+      alert('Ce nom de flux existe déjà. Veuillez choisir un nom unique.');
+      return;
+    }
     
     if (editingId) {
       // Mise à jour
+      console.log('Mise à jour du flux:', editingId);
       this.flowManager.updateFlow(editingId, flowData);
     } else {
       // Création
-      this.flowManager.addFlow(flowData);
+      console.log('Création d\'un nouveau flux:', flowData.name);
+      const newFlow = this.flowManager.addFlow(flowData);
+      console.log('Flux créé avec ID:', newFlow.id);
     }
 
+    console.log('Fermeture du modal et rafraîchissement du tableau');
     this.closeModal();
     this.renderTable();
     this.updateStats();
+    console.log('Nombre total de flux après ajout:', this.flowManager.getAllFlows().length);
   }
 
   private async renderTable(): Promise<void> {
     const interfaces = this.flowManager.getAllInterfaces();
     const flows = this.flowManager.getAllFlows();
     
+    console.log('renderTable() appelé - Interfaces:', interfaces.length, 'Flux:', flows.length);
+    
     if (interfaces.length === 0 && flows.length === 0) {
+      console.log('Aucune donnée - affichage de l\'état vide');
       this.tableBody.style.display = 'none';
       this.emptyState.style.display = 'block';
       return;
     }
 
+    console.log('Données trouvées - affichage du tableau');
     this.tableBody.style.display = '';
     this.emptyState.style.display = 'none';
 
@@ -665,6 +928,7 @@ class FlowUI {
     });
 
     this.tableBody.innerHTML = tableHTML;
+    console.log('HTML du tableau généré, longueur:', tableHTML.length);
 
     // Calcul des coûts de manière asynchrone
     flows.forEach(async (flow) => {
@@ -684,6 +948,7 @@ class FlowUI {
         }
       }
     });
+    console.log('renderTable() terminé');
   }
 
   private renderInterfaceRow(interfaceItem: Interface): string {
@@ -693,6 +958,8 @@ class FlowUI {
 
     return `
       <tr class="interface-row">
+        <td>-</td> <!-- Technologie -->
+        <td>-</td> <!-- Client -->
         <td>
           <div class="interface-name">
             <svg class="interface-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -706,22 +973,24 @@ class FlowUI {
           </div>
           ${interfaceItem.description ? `<div style="color: var(--text-secondary); font-size: var(--text-sm); margin-top: var(--space-1);">${this.escapeHtml(interfaceItem.description)}</div>` : ''}
         </td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>-</td>
-        <td>${totalCost > 0 ? `${totalCost}j` : '-'}</td>
-        <td>${this.formatDate(interfaceItem.updatedAt)}</td>
+        <td>-</td> <!-- Flux -->
+        <td>-</td> <!-- Sources -->
+        <td>-</td> <!-- Cibles -->
+        <td>-</td> <!-- Transformations -->
+        <td>-</td> <!-- Opération -->
+        <td>-</td> <!-- Type de flux -->
+        <td>-</td> <!-- Complexité -->
+        <td>-</td> <!-- Expertise -->
+        <td>${totalCost > 0 ? `${totalCost}j` : '-'}</td> <!-- Estimation (jours) -->
         <td>
           <div class="table-actions">
-            <button class="action-btn edit" onclick="flowUI.editInterface('${interfaceItem.id}')" title="Modifier l'interface">
+            <button class="action-btn edit" data-action="edit-interface" data-id="${interfaceItem.id}">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
               </svg>
             </button>
-            <button class="action-btn delete" onclick="flowUI.deleteInterface('${interfaceItem.id}')" title="Supprimer l'interface">
+            <button class="action-btn delete" data-action="delete-interface" data-id="${interfaceItem.id}" title="Supprimer l'interface">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3,6 5,6 21,6"></polyline>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -739,8 +1008,8 @@ class FlowUI {
     const cost = flow.cost ? `${flow.cost}j` : '<span class="cost-loading">Calcul...</span>';
     const complexityBadge = this.getComplexityBadge(flow.complexity);
     const expertiseBadge = this.getExpertiseBadge(flow.userLevel);
-    const flowTypeBadge = this.getFlowTypeBadge(flow.flowType);
-    const lastModified = this.formatDate(flow.updatedAt);
+    const operationBadge = this.getFlowTypeBadge(flow.flowType); // ancien flowTypeBadge
+    const typeFlux = flow.typeFlux || '-';
     const flowNameClass = isChild ? 'flow-name' : 'flow-name standalone';
 
     // Informations supplémentaires dans le tooltip
@@ -751,8 +1020,14 @@ class FlowUI {
     
     const additionalInfo = `Transcodifications: ${flow.maxTranscodifications || 0} | Règles: ${flow.maxRules || 0}${flow.architecturePivot ? ' | Architecture pivot' : ''}${flow.messagingQueue ? ' | Messaging queue' : ''}${errorManagementInfo.length > 0 ? ' | Gestion: ' + errorManagementInfo.join(', ') : ''}`;
 
+    // Calcul de l'indice de confiance basé sur la complétude du contrat d'interface
+    // (Supprimé de la ligne du tableau)
+
     return `
       <tr class="flow-row ${isChild ? 'child-flow' : ''}">
+        <td>${flow.tech || '-'}</td>
+        <td>${flow.client ? this.escapeHtml(flow.client) : '-'}</td>
+        <td>${isChild ? '' : '-'}</td>
         <td>
           <div class="${flowNameClass}">
             <strong>${this.escapeHtml(flow.name)}</strong>
@@ -766,26 +1041,26 @@ class FlowUI {
         <td>${flow.sources}</td>
         <td>${flow.targets}</td>
         <td>${flow.transformations}</td>
-        <td>${flowTypeBadge}</td>
+        <td>${operationBadge}</td>
+        <td>${typeFlux}</td>
         <td>${complexityBadge}</td>
         <td>${expertiseBadge}</td>
         <td id="cost-${flow.id}">${cost}</td>
-        <td>${lastModified}</td>
         <td>
           <div class="table-actions">
-            <button class="action-btn edit" onclick="flowUI.editFlow('${flow.id}')" title="Modifier">
+            <button class="action-btn edit" data-action="edit-flow" data-id="${flow.id}" title="Modifier">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
               </svg>
             </button>
-            <button class="action-btn duplicate" onclick="flowUI.duplicateFlow('${flow.id}')" title="Dupliquer">
+            <button class="action-btn duplicate" data-action="duplicate-flow" data-id="${flow.id}" title="Dupliquer">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
               </svg>
             </button>
-            <button class="action-btn delete" onclick="flowUI.deleteFlow('${flow.id}')" title="Supprimer">
+            <button class="action-btn delete" data-action="delete-flow" data-id="${flow.id}" title="Supprimer">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3,6 5,6 21,6"></polyline>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -817,6 +1092,9 @@ class FlowUI {
     };
     
     const badge = badges[userLevel as keyof typeof badges];
+    if (!badge) {
+      return `<span class="badge">${this.escapeHtml(userLevel || 'N/A')}</span>`;
+    }
     return `<span class="badge ${badge.class}">${badge.icon} ${badge.label}</span>`;
   }
 
@@ -827,6 +1105,9 @@ class FlowUI {
     };
     
     const badge = badges[flowType as keyof typeof badges];
+    if (!badge) {
+      return `<span class="badge">${this.escapeHtml(flowType || 'N/A')}</span>`;
+    }
     return `<span class="badge ${badge.class}">${badge.icon} ${badge.label}</span>`;
   }
 
@@ -885,12 +1166,12 @@ class FlowUI {
     }
   }
 
-  // Méthodes publiques pour les actions du tableau
-  public editFlow(id: string): void {
+  // Méthodes privées pour les actions du tableau
+  private editFlow(id: string): void {
     this.openModal(id);
   }
 
-  public deleteFlow(id: string): void {
+  private deleteFlow(id: string): void {
     const flow = this.flowManager.getFlow(id);
     if (!flow) return;
 
@@ -901,7 +1182,7 @@ class FlowUI {
     }
   }
 
-  public duplicateFlow(id: string): void {
+  private duplicateFlow(id: string): void {
     const duplicatedFlow = this.flowManager.duplicateFlow(id);
     if (duplicatedFlow) {
       this.renderTable();
@@ -913,11 +1194,11 @@ class FlowUI {
     }
   }
 
-  public editInterface(id: string): void {
+  private editInterface(id: string): void {
     this.openInterfaceModal(id);
   }
 
-  public deleteInterface(id: string): void {
+  private deleteInterface(id: string): void {
     const interfaceItem = this.flowManager.getInterface(id);
     if (!interfaceItem) return;
 
@@ -927,15 +1208,37 @@ class FlowUI {
       this.updateStats();
     }
   }
+
+  // Nouvelle méthode pour afficher la fiche détaillée d'un flux
+  public renderFlowDetails(flowId: string): void {
+    const flow = this.flowManager.getFlow(flowId);
+    if (!flow) return;
+    const result = this.calculator.calculateCost(flow);
+    const confiance = flow.contractCompleteness;
+    const confianceBadge = confiance >= 80 ? '<span class="badge badge-success">Haute</span>' : confiance >= 50 ? '<span class="badge badge-warning">Moyenne</span>' : '<span class="badge badge-danger">Faible</span>';
+    const recommendations = result.recommendations.map(r => `<li>${r}</li>`).join('');
+    const detailsHtml = `
+      <div class="recommendations-card">
+        <h3>Recommandations</h3>
+        <ul class="recommendations-list">${recommendations}</ul>
+        <div class="flow-extra-details">
+          <h4>Complétude du contrat d'interface</h4>
+          <p>${confiance}%</p>
+          <h4>Indice de confiance</h4>
+          <p>${confianceBadge}</p>
+          <h4>Commentaires détaillés</h4>
+          <p>${flow.comments ? this.escapeHtml(flow.comments) : '<em>Aucun commentaire</em>'}</p>
+        </div>
+      </div>
+    `;
+    const detailsContainer = document.getElementById('flowDetailsContainer');
+    if (detailsContainer) detailsContainer.innerHTML = detailsHtml;
+  }
 }
 
 // Initialisation
 let flowUI: FlowUI;
 
-// Exposition globale pour les événements onclick
-(window as any).flowUI = null;
-
 document.addEventListener('DOMContentLoaded', () => {
   flowUI = new FlowUI();
-  (window as any).flowUI = flowUI;
 });
