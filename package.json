@@ -1,0 +1,13 @@
+{
+  "name": "abacus",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "cd abacus-web && npm run dev",
+    "build": "cd abacus-web && npm run build",
+    "start": "cd abacus-web && npm start",
+    "check-env": "cd abacus-web && npm run check-env"
+  },
+  "description": "Application web d'abaques pour flux de données"
+}
+
