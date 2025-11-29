@@ -284,7 +284,7 @@ Avant de déployer, vérifiez :
 
 ### Configuration principale dans Vercel
 
-1. **Root Directory** : `abacus-web`
+1. **Root Directory** : *(vide - projet à la racine)*
 2. **Production Branch** : `main`
 3. **Preview Branches** : `dev` (et autres branches)
 
