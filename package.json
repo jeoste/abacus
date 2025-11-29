@@ -1,13 +1,36 @@
 {
-  "name": "abacus",
-  "version": "1.0.0",
+  "name": "abacus-web",
+  "version": "0.1.0",
   "private": true,
-  "scripts": {
-    "dev": "cd abacus-web && npm run dev",
-    "build": "cd abacus-web && npm run build",
-    "start": "cd abacus-web && npm start",
-    "check-env": "cd abacus-web && npm run check-env"
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
   },
-  "description": "Application web d'abaques pour flux de données"
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "check-env": "node check-env.js"
+  },
+  "dependencies": {
+    "@react-pdf/renderer": "^4.3.1",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.78.0",
+    "next": "^14.2.33",
+    "pdf-lib": "^1.17.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-icons": "^5.5.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^16.0.5",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  }
 }
-

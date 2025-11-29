@@ -1,49 +1,96 @@
-# Abacus - Application d'abaques pour flux de données
+# Abacus Web - Application d'abaques pour flux de données
 
-Application web pour estimer les charges des flux de données (Talend et Blueway).
+Application web Next.js pour estimer les charges des flux de données (Talend et Blueway).
 
-## Structure du projet
+## Stack Technique
 
+- **Frontend**: Next.js 14+ (App Router) avec TypeScript
+- **Base de données & Auth**: Supabase (PostgreSQL + Auth)
+- **Styling**: Tailwind CSS
+- **Export PDF**: pdf-lib
+- **Hébergement**: Vercel
+- **Node.js**: 20+ (requis pour @supabase/supabase-js)
+
+## Configuration
+
+### 1. Variables d'environnement
+
+Créez un fichier `.env.local` à la racine du projet avec les variables suivantes :
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=votre_url_supabase
+NEXT_PUBLIC_SUPABASE_ANON_KEY=votre_cle_anon_supabase
+SUPABASE_SERVICE_ROLE_KEY=votre_cle_service_role_supabase
 ```
-abacus/
-├── abacus-web/          # Application web Next.js
-└── plan.md              # Plan de développement
+
+### 2. Configuration Supabase
+
+1. Créez un projet sur [Supabase](https://supabase.com)
+2. Exécutez le script SQL fourni dans `supabase-schema.sql` dans l'éditeur SQL de Supabase
+3. Récupérez votre URL et vos clés API depuis les paramètres du projet
+
+### 3. Prérequis
+
+- **Node.js** : Version 20 ou supérieure (requis)
+- **npm** : Version 10 ou supérieure
+
+Pour vérifier votre version de Node.js :
+```bash
+node --version
 ```
 
-## Démarrage rapide
+Si vous utilisez `nvm` (Node Version Manager), le fichier `.nvmrc` est fourni :
+```bash
+nvm use
+```
 
-### Depuis la racine du projet
+### 4. Installation et lancement
 
 ```bash
-# Lancer l'application en développement
-npm run dev
+# Installation des dépendances
+npm install
 
-# Vérifier la configuration
-npm run check-env
-
-# Build pour production
-npm run build
-```
-
-### Depuis le dossier abacus-web
-
-```bash
-cd abacus-web
+# Lancement en mode développement
 npm run dev
 ```
 
 L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
 
-## Documentation
+## Déploiement sur Vercel
 
-Pour plus de détails, consultez :
-- [abacus-web/README.md](abacus-web/README.md) - Documentation complète
-- [abacus-web/SETUP_LOCAL.md](abacus-web/SETUP_LOCAL.md) - Guide de configuration locale
-- [abacus-web/QUICK_START.md](abacus-web/QUICK_START.md) - Démarrage rapide
+1. Connectez votre dépôt GitHub à Vercel
+2. Configurez les variables d'environnement dans les paramètres du projet Vercel
+3. Déployez !
 
-## Configuration requise
+## Fonctionnalités
 
-- Node.js 18.17.0+ (recommandé : 18.20.8+)
-- Un compte Supabase (gratuit)
-- Variables d'environnement configurées (voir SETUP_LOCAL.md)
+- ✅ Authentification utilisateur (Supabase Auth)
+- ✅ Gestion des interfaces
+- ✅ Gestion des flux de données
+- ✅ Calcul automatique des estimations basé sur les paramètres
+- ✅ Export CSV (format technique)
+- ✅ Export PDF (format professionnel)
+- ✅ Support Talend et Blueway
+- ✅ Gestion des profils utilisateur (junior/confirmé/expert)
 
+## Structure du projet
+
+```
+abacus-web/
+├── app/                    # Next.js App Router
+│   ├── (auth)/            # Routes d'authentification
+│   ├── (dashboard)/       # Routes protégées
+│   └── api/               # API Routes
+├── components/            # Composants React
+├── lib/                   # Utilitaires et logique métier
+│   ├── calculator/        # Logique de calcul
+│   ├── supabase/          # Clients Supabase
+│   └── types/             # Types TypeScript
+└── supabase-schema.sql    # Schéma de base de données
+```
+
+## Notes
+
+- Les estimations sont calculées automatiquement lors de la création/modification d'un flux
+- Les utilisateurs ne peuvent voir et modifier que leurs propres données (RLS activé)
+- Les exports CSV et PDF sont disponibles depuis les routes API
