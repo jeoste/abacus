@@ -41,7 +41,7 @@ git push origin dev  # ou votre branche principale
 
 3. **Configurer le projet**
    - **Project Name** : `abacus` (ou le nom de votre choix)
-   - **Root Directory** : `abacus-web` ⚠️ **IMPORTANT**
+   - **Root Directory** : *(laisser vide - projet à la racine)* ✅
    - **Framework Preset** : Next.js (détecté automatiquement)
    - **Build Command** : `npm run build` (par défaut)
    - **Output Directory** : `.next` (par défaut)
@@ -100,15 +100,12 @@ SUPABASE_SERVICE_ROLE_KEY
 
 Dans **Settings** > **General** > **Build & Development Settings** :
 
-- **Build Command** : `cd abacus-web && npm run build`
-- **Output Directory** : `abacus-web/.next`
-- **Install Command** : `cd abacus-web && npm install`
+Le projet étant à la racine du dépôt, utilisez les valeurs par défaut :
 
-**OU** si vous avez configuré le `package.json` à la racine :
-
-- **Root Directory** : `abacus-web` (dans les paramètres du projet)
+- **Root Directory** : *(laisser vide)*
 - **Build Command** : `npm run build` (par défaut)
 - **Output Directory** : `.next` (par défaut)
+- **Install Command** : `npm install` (par défaut)
 
 ### 4.2 Variables d'environnement par environnement
 
@@ -173,17 +170,12 @@ SUPABASE_SERVICE_ROLE_KEY=votre_cle_service_role
 
 ### Paramètres de build recommandés
 
-Si votre projet est dans `abacus-web/` :
+Le projet étant à la racine du dépôt :
 
-**Option 1 : Root Directory**
-- **Root Directory** : `abacus-web`
-- Build Command : `npm run build` (par défaut)
-- Output Directory : `.next` (par défaut)
-
-**Option 2 : Build Command personnalisé**
-- Root Directory : `/` (racine)
-- Build Command : `cd abacus-web && npm run build`
-- Output Directory : `abacus-web/.next`
+- **Root Directory** : *(laisser vide)*
+- **Build Command** : `npm run build` (par défaut)
+- **Output Directory** : `.next` (par défaut)
+- **Install Command** : `npm install` (par défaut)
 
 ### Node.js Version
 
@@ -196,7 +188,7 @@ Notre projet fonctionne avec Node.js 18.17.0+, donc pas de problème.
 
 **Vérifiez :**
 1. Les variables d'environnement sont bien configurées
-2. Le Root Directory est correct (`abacus-web`)
+2. Le Root Directory est vide (projet à la racine)
 3. Les dépendances sont installées (`npm install` fonctionne)
 
 **Solution :**
@@ -236,8 +228,7 @@ npm i -g vercel
 # Se connecter
 vercel login
 
-# Déployer
-cd abacus-web
+# Déployer (depuis la racine du projet)
 vercel
 
 # Déployer en production
@@ -247,7 +238,7 @@ vercel --prod
 ### Vérifier la configuration locale
 
 ```bash
-cd abacus-web
+# Depuis la racine du projet
 npm run build
 ```
 
@@ -269,7 +260,7 @@ Avant de déployer, vérifiez :
 - [ ] Projet Supabase créé et configuré
 - [ ] Schéma SQL exécuté dans Supabase
 - [ ] Variables d'environnement ajoutées dans Vercel
-- [ ] Root Directory configuré (`abacus-web`)
+- [ ] Root Directory laissé vide (projet à la racine)
 - [ ] Build fonctionne localement (`npm run build`)
 - [ ] `.env.local` dans `.gitignore`
 

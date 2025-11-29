@@ -44,7 +44,7 @@
 ## Étape 3 : Créer le fichier .env.local
 
 1. **Créer le fichier**
-   - Dans le dossier `abacus-web/`, créez un fichier nommé `.env.local`
+   - À la racine du projet, créez un fichier nommé `.env.local`
    - ⚠️ Le fichier doit commencer par un point (`.`)
 
 2. **Ajouter les variables**

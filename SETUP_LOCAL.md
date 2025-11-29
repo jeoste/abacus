@@ -36,7 +36,7 @@
 ### 2. Configuration des variables d'environnement
 
 1. **Créer le fichier `.env.local`**
-   - À la racine du projet `abacus-web/`
+   - À la racine du projet
    - Créez un fichier nommé `.env.local`
 
 2. **Ajouter les variables**
@@ -53,7 +53,6 @@
 Si ce n'est pas déjà fait :
 
 ```bash
-cd abacus-web
 npm install
 ```
 

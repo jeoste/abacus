@@ -76,7 +76,7 @@ L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
 ## Structure du projet
 
 ```
-abacus-web/
+abacus/
 ├── app/                    # Next.js App Router
 │   ├── (auth)/            # Routes d'authentification
 │   ├── (dashboard)/       # Routes protégées
@@ -86,7 +86,7 @@ abacus-web/
 │   ├── calculator/        # Logique de calcul
 │   ├── supabase/          # Clients Supabase
 │   └── types/             # Types TypeScript
-└── supabase-schema.sql    # Schéma de base de données
+└── supabase-schema-complete.sql    # Schéma de base de données
 ```
 
 ## Notes

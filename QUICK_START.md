@@ -14,7 +14,7 @@
 
 ### 2️⃣ Configuration locale (2 minutes)
 
-Créez `abacus-web/.env.local` :
+Créez `.env.local` à la racine du projet :
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://xxxxx.supabase.co
@@ -25,7 +25,6 @@ SUPABASE_SERVICE_ROLE_KEY=votre_cle_service_role
 ### 3️⃣ Lancement (1 minute)
 
 ```bash
-cd abacus-web
 npm install
 npm run dev
 ```
