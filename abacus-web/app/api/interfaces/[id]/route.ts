@@ -8,10 +8,14 @@ export async function GET(
   const supabase = await createClient();
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+  if (authError || !user) {
+    return NextResponse.json(
+      { error: 'Non autorisé. Vous devez être connecté.' },
+      { status: 401 }
+    );
   }
 
   const { data, error } = await supabase
@@ -35,10 +39,14 @@ export async function PUT(
   const supabase = await createClient();
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+  if (authError || !user) {
+    return NextResponse.json(
+      { error: 'Non autorisé. Vous devez être connecté.' },
+      { status: 401 }
+    );
   }
 
   const body = await request.json();
@@ -65,10 +73,14 @@ export async function DELETE(
   const supabase = await createClient();
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+  if (authError || !user) {
+    return NextResponse.json(
+      { error: 'Non autorisé. Vous devez être connecté.' },
+      { status: 401 }
+    );
   }
 
   const { error } = await supabase

@@ -1,18 +1,23 @@
 'use client';
 
 import Link from 'next/link';
-import type { Flow, Interface } from '@/lib/types';
+import type { Flow, System } from '@/lib/types';
 
 interface FlowTableProps {
   flows: Flow[];
-  interfaces: Interface[];
+  systems: System[];
+  isDemo?: boolean;
 }
 
-export default function FlowTable({ flows, interfaces }: FlowTableProps) {
-  const getInterfaceName = (interfaceId: string | null | undefined) => {
-    if (!interfaceId) return '-';
-    const interfaceItem = interfaces.find((i) => i.id === interfaceId);
-    return interfaceItem?.name || '-';
+export default function FlowTable({ flows, systems, isDemo = false }: FlowTableProps) {
+  const getSystemNames = (flow: Flow) => {
+    // Récupérer les systèmes associés via flows_systems
+    const flowSystems = (flow as any).flows_systems || [];
+    if (flowSystems.length === 0) return '-';
+    return flowSystems.map((fs: any) => {
+      const system = systems.find((s) => s.id === fs.system_id);
+      return system?.name || '-';
+    }).join(', ');
   };
 
   const handleDelete = async (id: string) => {
@@ -57,7 +62,7 @@ export default function FlowTable({ flows, interfaces }: FlowTableProps) {
               Client
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
-              Interface
+              Systèmes
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
               Nom
@@ -88,8 +93,8 @@ export default function FlowTable({ flows, interfaces }: FlowTableProps) {
               <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                 {flow.client || '-'}
               </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
-                {getInterfaceName(flow.interface_id)}
+              <td className="px-6 py-4 text-sm text-foreground">
+                {getSystemNames(flow)}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                 {flow.name}
@@ -117,27 +122,31 @@ export default function FlowTable({ flows, interfaces }: FlowTableProps) {
                 {flow.estimated_days ? `${flow.estimated_days}j` : '-'}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                <div className="flex space-x-2">
-                  <Link
-                    href={`/flows/${flow.id}`}
-                    className="text-primary hover:text-primary/90 transition-colors"
-                  >
-                    Modifier
-                  </Link>
-                  <a
-                    href={`/api/exports/pdf?flowId=${flow.id}`}
-                    className="text-primary hover:text-primary/90 transition-colors"
-                    download
-                  >
-                    PDF
-                  </a>
-                  <button
-                    onClick={() => handleDelete(flow.id)}
-                    className="text-destructive hover:text-destructive/90 transition-colors"
-                  >
-                    Supprimer
-                  </button>
-                </div>
+                {isDemo ? (
+                  <span className="text-muted-foreground">Mode démo</span>
+                ) : (
+                  <div className="flex space-x-2">
+                    <Link
+                      href={`/flows/${flow.id}`}
+                      className="text-primary hover:text-primary/90 transition-colors"
+                    >
+                      Modifier
+                    </Link>
+                    <a
+                      href={`/api/exports/pdf?flowId=${flow.id}`}
+                      className="text-primary hover:text-primary/90 transition-colors"
+                      download
+                    >
+                      PDF
+                    </a>
+                    <button
+                      onClick={() => handleDelete(flow.id)}
+                      className="text-destructive hover:text-destructive/90 transition-colors"
+                    >
+                      Supprimer
+                    </button>
+                  </div>
+                )}
               </td>
             </tr>
           ))}

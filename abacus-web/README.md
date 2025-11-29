@@ -9,6 +9,7 @@ Application web Next.js pour estimer les charges des flux de données (Talend et
 - **Styling**: Tailwind CSS
 - **Export PDF**: pdf-lib
 - **Hébergement**: Vercel
+- **Node.js**: 20+ (requis pour @supabase/supabase-js)
 
 ## Configuration
 
@@ -28,7 +29,22 @@ SUPABASE_SERVICE_ROLE_KEY=votre_cle_service_role_supabase
 2. Exécutez le script SQL fourni dans `supabase-schema.sql` dans l'éditeur SQL de Supabase
 3. Récupérez votre URL et vos clés API depuis les paramètres du projet
 
-### 3. Installation et lancement
+### 3. Prérequis
+
+- **Node.js** : Version 20 ou supérieure (requis)
+- **npm** : Version 10 ou supérieure
+
+Pour vérifier votre version de Node.js :
+```bash
+node --version
+```
+
+Si vous utilisez `nvm` (Node Version Manager), le fichier `.nvmrc` est fourni :
+```bash
+nvm use
+```
+
+### 4. Installation et lancement
 
 ```bash
 # Installation des dépendances

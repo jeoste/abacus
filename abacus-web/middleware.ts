@@ -31,10 +31,12 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protéger les routes du dashboard
-  if (request.nextUrl.pathname.startsWith('/flows') || 
-      request.nextUrl.pathname.startsWith('/interfaces') ||
-      request.nextUrl.pathname.startsWith('/exports')) {
+  // Protéger les routes du dashboard (sauf /flows/new, /projects, /systems, /flows qui sont accessibles publiquement en mode démo)
+  if (request.nextUrl.pathname.startsWith('/interfaces') ||
+      request.nextUrl.pathname.startsWith('/exports') ||
+      (request.nextUrl.pathname.startsWith('/flows') && 
+       request.nextUrl.pathname !== '/flows/new' && 
+       request.nextUrl.pathname !== '/flows')) {
     if (!user) {
       const returnTo = request.nextUrl.pathname;
       return NextResponse.redirect(new URL(`/login?returnTo=${encodeURIComponent(returnTo)}`, request.url));

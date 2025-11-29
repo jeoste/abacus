@@ -21,19 +21,61 @@ function LoginForm() {
     setError(null);
     setLoading(true);
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
-      setError(error.message);
+      // Gérer les erreurs de connexion
+      // Note: Si la vérification d'email est désactivée dans Supabase, 
+      // les erreurs liées à la confirmation seront ignorées
+      if (error.message.includes('Invalid login credentials') || 
+          error.message.includes('Invalid credentials')) {
+        setError('Email ou mot de passe incorrect. Vérifiez vos identifiants ou créez un compte.');
+      } else if (error.message.includes('Email not confirmed') || 
+                 (error.message.includes('email') && error.message.includes('confirm'))) {
+        // Si la vérification d'email est requise par Supabase, on affiche un message
+        // Sinon, cette erreur ne devrait pas apparaître si la vérification est désactivée
+        setError('Votre email n\'a pas encore été validé. Si la vérification d\'email est désactivée, contactez le support.');
+      } else {
+        setError(error.message);
+      }
       setLoading(false);
-    } else {
-      const returnTo = searchParams.get('returnTo') || '/flows';
-      router.push(returnTo);
-      router.refresh();
+      return;
     }
+
+    // Vérifier que l'utilisateur existe et a un profil
+    if (!data.user) {
+      setError('Erreur lors de la connexion. Veuillez réessayer.');
+      setLoading(false);
+      return;
+    }
+
+    // Vérifier que le profil existe dans la table profiles
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('id')
+      .eq('id', data.user.id)
+      .single();
+
+    if (profileError || !profile) {
+      // Le profil n'existe pas, déconnecter l'utilisateur
+      await supabase.auth.signOut();
+      setError('Ce compte n\'existe pas. Veuillez créer un compte avant de vous connecter.');
+      setLoading(false);
+      return;
+    }
+
+    // Note: La vérification de l'email est optionnelle
+    // Si vous avez désactivé "Enable email confirmations" dans Supabase,
+    // les utilisateurs peuvent se connecter sans vérifier leur email
+    // La vérification de email_confirmed_at n'est donc pas nécessaire ici
+
+    // Connexion réussie, rediriger
+    const returnTo = searchParams.get('returnTo') || '/flows';
+    router.push(returnTo);
+    router.refresh();
   };
 
   return (

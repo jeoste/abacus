@@ -1,8 +1,8 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect, notFound } from 'next/navigation';
-import FlowForm from '@/components/flows/FlowForm';
+import SystemForm from '@/components/systems/SystemForm';
 
-export default async function EditFlowPage({
+export default async function EditSystemPage({
   params,
 }: {
   params: { id: string };
@@ -16,19 +16,19 @@ export default async function EditFlowPage({
     redirect('/login');
   }
 
-  const { data: flow } = await supabase
-    .from('flows')
+  const { data: system } = await supabase
+    .from('systems')
     .select('*')
     .eq('id', params.id)
     .eq('user_id', user.id)
     .single();
 
-  if (!flow) {
+  if (!system) {
     notFound();
   }
 
-  const { data: systems } = await supabase
-    .from('systems')
+  const { data: projects } = await supabase
+    .from('projects')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
@@ -36,12 +36,12 @@ export default async function EditFlowPage({
   return (
     <div>
       <div className="mb-8">
-        <h2 className="text-3xl font-bold text-foreground mb-2">Modifier le flux</h2>
-        <p className="text-muted-foreground">Modifiez les paramètres de votre flux</p>
+        <h2 className="text-3xl font-bold text-foreground mb-2">Modifier le système</h2>
+        <p className="text-muted-foreground">Modifiez les paramètres de votre système</p>
       </div>
 
       <div className="bg-card rounded-xl shadow-sm p-6 border border-border">
-        <FlowForm flow={flow} systems={systems || []} />
+        <SystemForm system={system} projects={projects || []} />
       </div>
     </div>
   );

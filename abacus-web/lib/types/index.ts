@@ -8,7 +8,7 @@ export type Environment = 'dev' | 'test' | 'prod';
 export type Tech = 'Talend' | 'Blueway';
 export type FlowType = 'synchrone' | 'asynchrone';
 
-export interface Interface {
+export interface Project {
   id: string;
   user_id: string;
   name: string;
@@ -17,10 +17,22 @@ export interface Interface {
   updated_at: string;
 }
 
+export interface System {
+  id: string;
+  user_id: string;
+  project_id: string;
+  name: string;
+  description?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+// Alias pour compatibilité temporaire
+export type Interface = System;
+
 export interface Flow {
   id: string;
   user_id: string;
-  interface_id?: string | null;
   name: string;
   client?: string | null;
   tech: Tech;
@@ -61,5 +73,10 @@ export interface CalculationResult {
   timeEstimate: string;
   complexity: string;
   recommendations: string[];
+}
+
+export interface FlowSystem {
+  flow_id: string;
+  system_id: string;
 }
 

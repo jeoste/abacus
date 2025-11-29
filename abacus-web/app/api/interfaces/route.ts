@@ -5,10 +5,14 @@ export async function GET() {
   const supabase = await createClient();
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+  if (authError || !user) {
+    return NextResponse.json(
+      { error: 'Non autorisé. Vous devez être connecté.' },
+      { status: 401 }
+    );
   }
 
   const { data, error } = await supabase
@@ -28,19 +32,26 @@ export async function POST(request: Request) {
   const supabase = await createClient();
   const {
     data: { user },
+    error: authError,
   } = await supabase.auth.getUser();
 
-  if (!user) {
-    return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+  if (authError || !user) {
+    return NextResponse.json(
+      { error: 'Non autorisé. Vous devez être connecté pour sauvegarder une interface.' },
+      { status: 401 }
+    );
   }
 
   const body = await request.json();
 
+  // S'assurer que user_id n'est pas fourni dans le body (sécurité)
+  const { user_id, ...safeBody } = body;
+
   const { data, error } = await supabase
     .from('interfaces')
     .insert({
-      ...body,
-      user_id: user.id,
+      ...safeBody,
+      user_id: user.id, // Toujours utiliser l'ID de l'utilisateur authentifié
     })
     .select()
     .single();
