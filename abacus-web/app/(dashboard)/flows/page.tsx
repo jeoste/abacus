@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import FlowTable from '@/components/flows/FlowTable';
 import Link from 'next/link';
+import { HiCalculator } from 'react-icons/hi2';
 
 // Données de démo
 const demoFlows = [
@@ -151,21 +152,100 @@ export default async function FlowsPage() {
 
   return (
     <div>
+      {/* Section Tutoriel pour mode démo */}
       {isDemo && (
-        <div className="mb-6 bg-primary/10 border border-primary/20 rounded-lg p-4">
-          <p className="text-sm text-foreground">
-            <strong>Mode démo :</strong> Vous visualisez des données d'exemple. 
-            <Link href="/signup" className="ml-1 text-primary hover:underline font-medium">
-              Inscrivez-vous
-            </Link>
-            {' '}pour créer vos propres flux.
-          </p>
+        <div className="mb-8 bg-card rounded-xl shadow-sm p-8 border border-border">
+          <div className="flex items-center space-x-4 mb-6">
+            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+              <HiCalculator className="w-8 h-8 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold text-foreground">3. Flux</h2>
+              <p className="text-muted-foreground">Calculez la charge de vos flux de données</p>
+            </div>
+          </div>
+          
+          <div className="space-y-6">
+            <div className="bg-muted/50 rounded-lg p-6 border border-border">
+              <h3 className="text-xl font-semibold text-foreground mb-4">Tutoriel : Comment créer et utiliser un flux</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">1</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Créer un flux</h4>
+                    <p className="text-muted-foreground">
+                      Cliquez sur "+ Nouveau flux" et renseignez les informations de base : nom, description,
+                      technologie (Talend ou Blueway), et les systèmes sources et cibles associés.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">2</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Configurer les paramètres</h4>
+                    <p className="text-muted-foreground">
+                      Définissez la complexité du flux, le nombre de sources et cibles, les volumes de données,
+                      la fréquence d'exécution, et autres paramètres qui influencent l'estimation.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">3</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Obtenir l'estimation</h4>
+                    <p className="text-muted-foreground">
+                      L'algorithme calcule automatiquement l'estimation en jours-homme avec une répartition
+                      par phase : développement, tests, déploiement et maintenance.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">4</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Sauvegarder et exporter</h4>
+                    <p className="text-muted-foreground">
+                      Enregistrez votre flux et exportez vos estimations en PDF ou CSV pour vos rapports
+                      et présentations.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+              <span>💡</span>
+              <span>
+                Mode démo : Vous visualisez des données d'exemple. 
+                <Link href="/signup" className="ml-1 text-primary hover:underline font-medium">
+                  Inscrivez-vous
+                </Link>
+                {' '}pour créer vos propres flux.
+              </span>
+            </div>
+          </div>
         </div>
       )}
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-foreground mb-2">Gestion des flux</h2>
-        <p className="text-muted-foreground">Calculez la charge de vos flux de données</p>
-      </div>
+
+      {!isDemo && (
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-foreground mb-2">Gestion des flux</h2>
+          <p className="text-muted-foreground">Calculez la charge de vos flux de données</p>
+        </div>
+      )}
+
+      {/* Section des données de démo ou flux utilisateur */}
+      {isDemo && flows && flows.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-2xl font-bold text-foreground mb-4">Exemples de flux</h3>
+        </div>
+      )}
 
       <div className="bg-card rounded-xl shadow-sm p-6 border border-border">
         <div className="flex justify-between items-center mb-6">

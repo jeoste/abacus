@@ -70,16 +70,15 @@ export default function LandingPage({ isAuthenticated }: LandingPageProps) {
           ) : (
             <div className="space-y-6">
               <div className="bg-muted/50 rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold text-foreground mb-4">Tutoriel : Comment créer et utiliser un projet</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-4">Fonctionnement d'un projet</h3>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
                     <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-primary font-bold text-sm">1</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground mb-1">Créer un projet</h4>
+                      <h4 className="font-semibold text-foreground mb-1"></h4>
                       <p className="text-muted-foreground">
-                        Cliquez sur "Nouveau projet" et renseignez le nom et la description de votre projet.
                         Les projets servent de conteneurs pour organiser vos systèmes et flux.
                       </p>
                     </div>
@@ -89,22 +88,10 @@ export default function LandingPage({ isAuthenticated }: LandingPageProps) {
                       <span className="text-primary font-bold text-sm">2</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground mb-1">Organiser vos systèmes</h4>
+                      <h4 className="font-semibold text-foreground mb-1"></h4>
                       <p className="text-muted-foreground">
-                        Une fois votre projet créé, vous pourrez y associer des systèmes. Chaque système
-                        représente une application ou un service source ou cible de vos flux de données.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">3</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1">Associer des flux</h4>
-                      <p className="text-muted-foreground">
-                        Les flux de données peuvent être associés à un ou plusieurs systèmes d'un projet.
-                        Cela permet de visualiser l'ensemble des flux liés à un projet.
+                        Chaque projet peut contenir un ou plusieurs systèmes et autant de flux que nécessaire.
+                        <br />Par exemple : création d'un projet "modernisation du SI".
                       </p>
                     </div>
                   </div>
@@ -149,17 +136,16 @@ export default function LandingPage({ isAuthenticated }: LandingPageProps) {
           ) : (
             <div className="space-y-6">
               <div className="bg-muted/50 rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold text-foreground mb-4">Tutoriel : Comment créer et utiliser un système</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-4">Fonctionnement d'un système</h3>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
                     <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-primary font-bold text-sm">1</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground mb-1">Créer un système</h4>
+                      <h4 className="font-semibold text-foreground mb-1"></h4>
                       <p className="text-muted-foreground">
-                        Cliquez sur "+ Nouveau système" et renseignez les informations : nom, type (source ou cible),
-                        technologie utilisée, et optionnellement le projet auquel il appartient.
+                        Les systèmes représentent les applications ou services qui sont sources ou cibles de vos flux de données.
                       </p>
                     </div>
                   </div>
@@ -168,22 +154,11 @@ export default function LandingPage({ isAuthenticated }: LandingPageProps) {
                       <span className="text-primary font-bold text-sm">2</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground mb-1">Associer à un projet</h4>
+                      <h4 className="font-semibold text-foreground mb-1"></h4>
                       <p className="text-muted-foreground">
-                        Lors de la création, vous pouvez associer le système à un projet existant.
-                        Cela permet de regrouper tous les systèmes d'un même projet.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">3</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1">Utiliser dans les flux</h4>
-                      <p className="text-muted-foreground">
-                        Une fois créés, vos systèmes pourront être sélectionnés lors de la création de flux.
-                        Un flux peut avoir plusieurs systèmes sources et plusieurs systèmes cibles.
+                        Les systèmes peuvent être associés à un ou plusieurs projets.
+                        Cela permet de visualiser l'ensemble des systèmes liés à un projet. 
+                        <br />Par exemple : un système CRM "Salesforce" et un système ERP "SAP", pourront être associés au projet "modernisation du SI".
                       </p>
                     </div>
                   </div>
@@ -228,17 +203,17 @@ export default function LandingPage({ isAuthenticated }: LandingPageProps) {
           ) : (
             <div className="space-y-6">
               <div className="bg-muted/50 rounded-lg p-6 border border-border">
-                <h3 className="text-xl font-semibold text-foreground mb-4">Tutoriel : Comment créer et utiliser un flux</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-4">Fonctionnement d'un flux</h3>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">
                     <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                       <span className="text-primary font-bold text-sm">1</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground mb-1">Créer un flux</h4>
+                      <h4 className="font-semibold text-foreground mb-1"></h4>
                       <p className="text-muted-foreground">
-                        Cliquez sur "+ Nouveau flux" et renseignez les informations de base : nom, description,
-                        technologie (Talend ou Blueway), et les systèmes sources et cibles associés.
+                        Les flux de données représentent le code créé pour transformer les données d'un système source vers un système cible. 
+                        <br />La forme de chaque flux (ETL, ESB, API, Services) est unique et la granularité est définie au cas par cas.
                       </p>
                     </div>
                   </div>
@@ -247,34 +222,10 @@ export default function LandingPage({ isAuthenticated }: LandingPageProps) {
                       <span className="text-primary font-bold text-sm">2</span>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-foreground mb-1">Configurer les paramètres</h4>
+                      <h4 className="font-semibold text-foreground mb-1"></h4>
                       <p className="text-muted-foreground">
-                        Définissez la complexité du flux, le nombre de sources et cibles, les volumes de données,
-                        la fréquence d'exécution, et autres paramètres qui influencent l'estimation.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">3</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1">Obtenir l'estimation</h4>
-                      <p className="text-muted-foreground">
-                        L'algorithme calcule automatiquement l'estimation en jours-homme avec une répartition
-                        par phase : développement, tests, déploiement et maintenance.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">4</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1">Sauvegarder et exporter</h4>
-                      <p className="text-muted-foreground">
-                        Enregistrez votre flux et exportez vos estimations en PDF ou CSV pour vos rapports
-                        et présentations.
+                        Les flux peuvent être associés à un ou plusieurs systèmes / interfaces d'un projet.
+                        <br />Par exemple : un flux ETL reliant le CRM "Salesforce" et l'ERP "SAP", pourra être associé à ces 2 systèmes.
                       </p>
                     </div>
                   </div>
@@ -299,22 +250,20 @@ export default function LandingPage({ isAuthenticated }: LandingPageProps) {
             <div>
               <h3 className="text-xl font-semibold text-foreground mb-3">Rapide et précis</h3>
               <p className="text-muted-foreground">
-                Obtenez une estimation fiable en quelques minutes grâce à des abaques éprouvés basés
-                sur des années d'expérience.
+                Obtenez une estimation fiable grâce à des abaques éprouvés basés sur des années d'expérience.
               </p>
             </div>
             <div>
               <h3 className="text-xl font-semibold text-foreground mb-3">Multi-technologies</h3>
               <p className="text-muted-foreground">
-                Support de Talend et Blueway avec des paramètres spécifiques à chaque technologie
-                pour des estimations adaptées.
+                Support de Talend et Blueway. Autres technologies à venir...
               </p>
             </div>
             <div>
               <h3 className="text-xl font-semibold text-foreground mb-3">Organisation flexible</h3>
               <p className="text-muted-foreground">
-                Groupez vos flux par interfaces ou projets, suivez vos estimations et exportez vos
-                données facilement.
+                Découpez vos flux par interfaces et projets, suivez vos estimations, réutilisez vos flux et exportez vos
+                données.
               </p>
             </div>
           </div>
@@ -325,20 +274,19 @@ export default function LandingPage({ isAuthenticated }: LandingPageProps) {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="bg-primary/10 rounded-2xl p-12 text-center border border-primary/20">
           <h2 className="text-3xl font-bold text-foreground mb-4">
-            Prêt à commencer ?
+            Intriguer ?
           </h2>
           <p className="text-xl text-muted-foreground mb-8">
-            Créez votre premier abaque en quelques clics
+            Essayez l'outil en démonstration
           </p>
           <Link
-            href="/flows/new"
+            href="/projects"
             className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-lg font-medium text-lg"
           >
-            Créer mes abaques
+            Découvrir l'outil
           </Link>
         </div>
       </section>
     </div>
   );
 }
-

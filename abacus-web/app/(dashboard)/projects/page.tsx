@@ -49,23 +49,81 @@ export default async function ProjectsPage() {
 
   return (
     <div>
+      {/* Section Tutoriel pour mode démo */}
       {isDemo && (
-        <div className="mb-6 bg-primary/10 border border-primary/20 rounded-lg p-4">
-          <p className="text-sm text-foreground">
-            <strong>Mode démo :</strong> Vous visualisez des données d'exemple. 
-            <Link href="/signup" className="ml-1 text-primary hover:underline font-medium">
-              Inscrivez-vous
-            </Link>
-            {' '}pour créer vos propres projets.
-          </p>
+        <div className="mb-8 bg-card rounded-xl shadow-sm p-8 border border-border">
+          <div className="flex items-center space-x-4 mb-6">
+            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+              <HiFolder className="w-8 h-8 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold text-foreground">1. Projets</h2>
+              <p className="text-muted-foreground">Organisez vos systèmes et flux par projet</p>
+            </div>
+          </div>
+          
+          <div className="space-y-6">
+            <div className="bg-muted/50 rounded-lg p-6 border border-border">
+              <h3 className="text-xl font-semibold text-foreground mb-4">Tutoriel : Comment créer et utiliser un projet</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">1</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Créer un projet</h4>
+                    <p className="text-muted-foreground">
+                      Cliquez sur "Nouveau projet" et renseignez le nom et la description de votre projet.
+                      Les projets servent de conteneurs pour organiser vos systèmes et flux.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">2</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Organiser vos systèmes</h4>
+                    <p className="text-muted-foreground">
+                      Une fois votre projet créé, vous pourrez y associer des systèmes. Chaque système
+                      représente une application ou un service source ou cible de vos flux de données.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">3</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Associer des flux</h4>
+                    <p className="text-muted-foreground">
+                      Les flux de données peuvent être associés à un ou plusieurs systèmes d'un projet.
+                      Cela permet de visualiser l'ensemble des flux liés à un projet.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+              <span>💡</span>
+              <span>
+                Mode démo : Vous visualisez des données d'exemple. 
+                <Link href="/signup" className="ml-1 text-primary hover:underline font-medium">
+                  Inscrivez-vous
+                </Link>
+                {' '}pour créer vos propres projets.
+              </span>
+            </div>
+          </div>
         </div>
       )}
-      <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h2 className="text-3xl font-bold text-foreground mb-2">Mes projets</h2>
-          <p className="text-muted-foreground">Organisez vos systèmes et flux par projet</p>
-        </div>
-        {!isDemo && (
+
+      {!isDemo && (
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h2 className="text-3xl font-bold text-foreground mb-2">Mes projets</h2>
+            <p className="text-muted-foreground">Organisez vos systèmes et flux par projet</p>
+          </div>
           <Link
             href="/projects/new"
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium flex items-center space-x-2"
@@ -73,8 +131,15 @@ export default async function ProjectsPage() {
             <HiPlus className="w-5 h-5" />
             <span>Nouveau projet</span>
           </Link>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Section des données de démo ou projets utilisateur */}
+      {isDemo && projects && projects.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-2xl font-bold text-foreground mb-4">Exemples de projets</h3>
+        </div>
+      )}
 
       {projects && projects.length > 0 ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

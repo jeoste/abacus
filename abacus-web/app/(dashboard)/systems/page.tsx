@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import SystemTable from '@/components/systems/SystemTable';
+import { HiServer } from 'react-icons/hi2';
 
 // Données de démo
 const demoSystems = [
@@ -93,21 +94,88 @@ export default async function SystemsPage() {
 
   return (
     <div>
+      {/* Section Tutoriel pour mode démo */}
       {isDemo && (
-        <div className="mb-6 bg-primary/10 border border-primary/20 rounded-lg p-4">
-          <p className="text-sm text-foreground">
-            <strong>Mode démo :</strong> Vous visualisez des données d'exemple. 
-            <Link href="/signup" className="ml-1 text-primary hover:underline font-medium">
-              Inscrivez-vous
-            </Link>
-            {' '}pour créer vos propres systèmes.
-          </p>
+        <div className="mb-8 bg-card rounded-xl shadow-sm p-8 border border-border">
+          <div className="flex items-center space-x-4 mb-6">
+            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center">
+              <HiServer className="w-8 h-8 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-3xl font-bold text-foreground">2. Systèmes</h2>
+              <p className="text-muted-foreground">Gérez vos systèmes sources et cibles</p>
+            </div>
+          </div>
+          
+          <div className="space-y-6">
+            <div className="bg-muted/50 rounded-lg p-6 border border-border">
+              <h3 className="text-xl font-semibold text-foreground mb-4">Tutoriel : Comment créer et utiliser un système</h3>
+              <div className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">1</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Créer un système</h4>
+                    <p className="text-muted-foreground">
+                      Cliquez sur "+ Nouveau système" et renseignez les informations : nom, type (source ou cible),
+                      technologie utilisée, et optionnellement le projet auquel il appartient.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">2</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Associer à un projet</h4>
+                    <p className="text-muted-foreground">
+                      Lors de la création, vous pouvez associer le système à un projet existant.
+                      Cela permet de regrouper tous les systèmes d'un même projet.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <span className="text-primary font-bold text-sm">3</span>
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-foreground mb-1">Utiliser dans les flux</h4>
+                    <p className="text-muted-foreground">
+                      Une fois créés, vos systèmes pourront être sélectionnés lors de la création de flux.
+                      Un flux peut avoir plusieurs systèmes sources et plusieurs systèmes cibles.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+              <span>💡</span>
+              <span>
+                Mode démo : Vous visualisez des données d'exemple. 
+                <Link href="/signup" className="ml-1 text-primary hover:underline font-medium">
+                  Inscrivez-vous
+                </Link>
+                {' '}pour créer vos propres systèmes.
+              </span>
+            </div>
+          </div>
         </div>
       )}
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold text-foreground mb-2">Gestion des systèmes</h2>
-        <p className="text-muted-foreground">Organisez vos systèmes par projet</p>
-      </div>
+
+      {!isDemo && (
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-foreground mb-2">Gestion des systèmes</h2>
+          <p className="text-muted-foreground">Organisez vos systèmes par projet</p>
+        </div>
+      )}
+
+      {/* Section des données de démo ou systèmes utilisateur */}
+      {isDemo && systems && systems.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-2xl font-bold text-foreground mb-4">Exemples de systèmes</h3>
+        </div>
+      )}
 
       <div className="bg-card rounded-xl shadow-sm p-6 border border-border">
         {!isDemo && (
