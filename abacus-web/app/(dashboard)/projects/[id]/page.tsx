@@ -1,7 +1,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect, notFound } from 'next/navigation';
 import Link from 'next/link';
-import { HiFolder, HiPlus, HiPencil } from 'react-icons/hi2';
+import { HiFolder, HiPlus, HiPencil, HiArrowLeft } from 'react-icons/hi2';
 
 export default async function ProjectDetailPage({
   params,
@@ -59,6 +59,15 @@ export default async function ProjectDetailPage({
   return (
     <div>
       <div className="mb-8">
+        <div className="mb-4">
+          <Link
+            href="/projects"
+            className="inline-flex items-center space-x-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-4"
+          >
+            <HiArrowLeft className="w-4 h-4" />
+            <span>Retour à la liste des projets</span>
+          </Link>
+        </div>
         <div className="flex items-center justify-between mb-4">
           <div>
             <h2 className="text-3xl font-bold text-foreground mb-2">{project.name}</h2>

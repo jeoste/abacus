@@ -3,13 +3,13 @@ import Link from 'next/link';
 import SystemTable from '@/components/systems/SystemTable';
 import { HiServer } from 'react-icons/hi2';
 
-// Données de démo
+// Données de démo basées sur les exemples de la landing page
 const demoSystems = [
   {
     id: 'demo-sys-1',
     user_id: 'demo-user',
-    name: 'ERP Source',
-    description: 'Système ERP source pour la migration',
+    name: 'CRM Salesforce',
+    description: 'Système CRM Salesforce pour la gestion de la relation client',
     project_id: 'demo-1',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
@@ -17,27 +17,9 @@ const demoSystems = [
   {
     id: 'demo-sys-2',
     user_id: 'demo-user',
-    name: 'ERP Cible',
-    description: 'Nouveau système ERP cible',
+    name: 'ERP SAP',
+    description: 'Système ERP SAP pour la gestion des ressources de l\'entreprise',
     project_id: 'demo-1',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'demo-sys-3',
-    user_id: 'demo-user',
-    name: 'Système Transactionnel',
-    description: 'Système transactionnel source de données',
-    project_id: 'demo-2',
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-  },
-  {
-    id: 'demo-sys-4',
-    user_id: 'demo-user',
-    name: 'Data Warehouse',
-    description: 'Entrepôt de données pour la Business Intelligence',
-    project_id: 'demo-2',
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
   },
@@ -46,15 +28,9 @@ const demoSystems = [
 const demoFlows = [
   {
     id: 'demo-flow-1',
-    name: 'Migration Données Clients',
-    estimated_days: 15,
+    name: 'Flux ETL CRM-ERP',
+    estimated_days: 12,
     flows_systems: [{ system_id: 'demo-sys-1' }, { system_id: 'demo-sys-2' }],
-  },
-  {
-    id: 'demo-flow-2',
-    name: 'Extraction Données Ventes',
-    estimated_days: 8,
-    flows_systems: [{ system_id: 'demo-sys-3' }, { system_id: 'demo-sys-4' }],
   },
 ];
 
@@ -69,13 +45,23 @@ export default async function SystemsPage() {
   let systems = null;
   let flows = null;
   
+  let projects = null;
+  
   if (!isDemo) {
     const { data: userSystems } = await supabase
       .from('systems')
-      .select('*')
+      .select(`
+        *,
+        projects (id, name)
+      `)
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
-    systems = userSystems;
+    
+    // Normaliser les résultats (Supabase peut retourner projects comme tableau ou objet)
+    systems = (userSystems || []).map((sys: any) => ({
+      ...sys,
+      projects: Array.isArray(sys.projects) ? sys.projects[0] || null : sys.projects || null,
+    }));
 
     const { data: userFlows } = await supabase
       .from('flows')
@@ -87,9 +73,17 @@ export default async function SystemsPage() {
       `)
       .eq('user_id', user.id);
     flows = userFlows;
+
+    const { data: userProjects } = await supabase
+      .from('projects')
+      .select('id, name')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false });
+    projects = userProjects;
   } else {
     systems = demoSystems;
     flows = demoFlows;
+    projects = [{ id: 'demo-1', name: 'modernisation du SI' }];
   }
 
   return (
@@ -107,57 +101,39 @@ export default async function SystemsPage() {
             </div>
           </div>
           
-          <div className="space-y-6">
-            <div className="bg-muted/50 rounded-lg p-6 border border-border">
-              <h3 className="text-xl font-semibold text-foreground mb-4">Tutoriel : Comment créer et utiliser un système</h3>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
+          <div className="space-y-8">
+            <div className="bg-muted/50 rounded-lg p-6 md:p-8 border border-border">
+              <h3 className="text-xl font-semibold text-foreground mb-6">Fonctionnement d'un système</h3>
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-primary font-bold text-sm">1</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground mb-1">Créer un système</h4>
-                    <p className="text-muted-foreground">
-                      Cliquez sur "+ Nouveau système" et renseignez les informations : nom, type (source ou cible),
-                      technologie utilisée, et optionnellement le projet auquel il appartient.
+                    <h4 className="font-semibold text-foreground mb-1"></h4>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Les systèmes représentent les applications ou services qui sont sources ou cibles de vos flux de données.
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3">
+                <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-primary font-bold text-sm">2</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground mb-1">Associer à un projet</h4>
-                    <p className="text-muted-foreground">
-                      Lors de la création, vous pouvez associer le système à un projet existant.
-                      Cela permet de regrouper tous les systèmes d'un même projet.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-primary font-bold text-sm">3</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-1">Utiliser dans les flux</h4>
-                    <p className="text-muted-foreground">
-                      Une fois créés, vos systèmes pourront être sélectionnés lors de la création de flux.
-                      Un flux peut avoir plusieurs systèmes sources et plusieurs systèmes cibles.
+                    <h4 className="font-semibold text-foreground mb-1"></h4>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Les systèmes peuvent être associés à un ou plusieurs projets.
+                      Cela permet de visualiser l'ensemble des systèmes liés à un projet. 
+                      <br />Par exemple : un système CRM "Salesforce" et un système ERP "SAP", pourront être associés au projet "modernisation du SI".
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              <span>💡</span>
-              <span>
-                Mode démo : Vous visualisez des données d'exemple. 
-                <Link href="/signup" className="ml-1 text-primary hover:underline font-medium">
-                  Inscrivez-vous
-                </Link>
-                {' '}pour créer vos propres systèmes.
-              </span>
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground bg-primary/5 rounded-lg p-4 border border-primary/10">
+              <span className="text-lg">💡</span>
+              <span>Connectez-vous pour accéder à la page Systèmes et commencer à créer vos systèmes</span>
             </div>
           </div>
         </div>
@@ -166,7 +142,9 @@ export default async function SystemsPage() {
       {!isDemo && (
         <div className="mb-8">
           <h2 className="text-3xl font-bold text-foreground mb-2">Gestion des systèmes</h2>
-          <p className="text-muted-foreground">Organisez vos systèmes par projet</p>
+          <p className="text-muted-foreground">
+            Organisez vos systèmes par projet ou créez des systèmes indépendants
+          </p>
         </div>
       )}
 
@@ -189,7 +167,7 @@ export default async function SystemsPage() {
           </div>
         )}
 
-        <SystemTable systems={systems || []} flows={flows || []} isDemo={isDemo} />
+        <SystemTable systems={systems || []} flows={flows || []} projects={projects || []} isDemo={isDemo} />
       </div>
     </div>
   );

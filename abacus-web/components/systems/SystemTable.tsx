@@ -4,12 +4,13 @@ import Link from 'next/link';
 import type { System, Flow } from '@/lib/types';
 
 interface SystemTableProps {
-  systems: System[];
+  systems: (System & { projects?: { id: string; name: string } | null })[];
   flows: Flow[];
+  projects?: { id: string; name: string }[];
   isDemo?: boolean;
 }
 
-export default function SystemTable({ systems, flows, isDemo = false }: SystemTableProps) {
+export default function SystemTable({ systems, flows, projects = [], isDemo = false }: SystemTableProps) {
   const getFlowCount = (systemId: string) => {
     // Compter les flux qui ont ce système dans flows_systems
     return flows.filter((flow: any) => {
@@ -60,6 +61,9 @@ export default function SystemTable({ systems, flows, isDemo = false }: SystemTa
               Description
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
+              Projet
+            </th>
+            <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
               Nombre de flux
             </th>
             <th className="px-6 py-3 text-left text-xs font-medium text-foreground uppercase tracking-wider">
@@ -75,6 +79,18 @@ export default function SystemTable({ systems, flows, isDemo = false }: SystemTa
               </td>
               <td className="px-6 py-4 text-sm text-muted-foreground">
                 {system.description || '-'}
+              </td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
+                {system.projects ? (
+                  <Link
+                    href={`/projects/${system.projects.id}`}
+                    className="text-primary hover:text-primary/80 hover:underline"
+                  >
+                    {system.projects.name}
+                  </Link>
+                ) : (
+                  <span className="text-muted-foreground italic">Aucun projet</span>
+                )}
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-foreground">
                 {getFlowCount(system.id)}

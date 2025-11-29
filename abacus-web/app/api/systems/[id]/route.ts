@@ -80,8 +80,9 @@ export async function PUT(
     }
 
     const updateData: any = { ...safeBody };
-    if (project_id) {
-      updateData.project_id = project_id;
+    // Permettre de définir project_id à null pour délier un système d'un projet
+    if (project_id !== undefined) {
+      updateData.project_id = project_id || null;
     }
 
     const { data, error } = await supabase

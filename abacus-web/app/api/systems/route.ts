@@ -65,26 +65,21 @@ export async function POST(request: Request) {
     // S'assurer que user_id et project_id sont valides
     const { user_id, project_id, ...safeBody } = body;
 
-    if (!project_id) {
-      return NextResponse.json(
-        { error: 'project_id est requis pour créer un système.' },
-        { status: 400 }
-      );
-    }
+    // Vérifier que le projet appartient à l'utilisateur si project_id est fourni
+    if (project_id) {
+      const { data: project } = await supabase
+        .from('projects')
+        .select('id')
+        .eq('id', project_id)
+        .eq('user_id', user.id)
+        .single();
 
-    // Vérifier que le projet appartient à l'utilisateur
-    const { data: project } = await supabase
-      .from('projects')
-      .select('id')
-      .eq('id', project_id)
-      .eq('user_id', user.id)
-      .single();
-
-    if (!project) {
-      return NextResponse.json(
-        { error: 'Projet non trouvé ou non autorisé.' },
-        { status: 404 }
-      );
+      if (!project) {
+        return NextResponse.json(
+          { error: 'Projet non trouvé ou non autorisé.' },
+          { status: 404 }
+        );
+      }
     }
 
     const { data, error } = await supabase
@@ -92,7 +87,7 @@ export async function POST(request: Request) {
       .insert({
         ...safeBody,
         user_id: user.id,
-        project_id: project_id,
+        project_id: project_id || null,
       })
       .select()
       .single();

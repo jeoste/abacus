@@ -3,114 +3,45 @@ import FlowTable from '@/components/flows/FlowTable';
 import Link from 'next/link';
 import { HiCalculator } from 'react-icons/hi2';
 
-// Données de démo
+// Données de démo basées sur les exemples de la landing page
 const demoFlows = [
   {
     id: 'demo-flow-1',
     user_id: 'demo-user',
-    name: 'Migration Données Clients',
-    client: 'Client ABC',
+    name: 'Flux ETL CRM-ERP',
+    client: 'Client Démo',
     tech: 'Talend' as const,
     sources: 1,
     targets: 1,
-    transformations: 5,
+    transformations: 6,
     complexity: 'modérée' as const,
     user_level: 'confirmé' as const,
-    data_volume: 100000,
-    frequency: 'unique' as const,
+    data_volume: 150000,
+    frequency: 'quotidien' as const,
     environment: 'prod' as const,
     type_flux: 'job ETL' as const,
     flow_type: 'synchrone' as const,
-    max_transcodifications: 3,
+    max_transcodifications: 4,
     max_sources: 1,
     max_targets: 1,
-    max_rules: 5,
+    max_rules: 6,
     architecture_pivot: false,
     messaging_queue: false,
     gestion_erreurs_techniques: true,
     gestion_erreurs_fonctionnelles: true,
     gestion_logs: true,
-    contract_completeness: 80,
-    comments: 'Migration des données clients depuis l\'ancien ERP vers le nouveau',
-    estimated_days: 15,
+    contract_completeness: 85,
+    comments: 'Flux ETL reliant le CRM "Salesforce" et l\'ERP "SAP"',
+    estimated_days: 12,
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString(),
     flows_systems: [{ system_id: 'demo-sys-1' }, { system_id: 'demo-sys-2' }],
   },
-  {
-    id: 'demo-flow-2',
-    user_id: 'demo-user',
-    name: 'Extraction Données Ventes',
-    client: 'Client XYZ',
-    tech: 'Blueway' as const,
-    sources: 1,
-    targets: 1,
-    transformations: 3,
-    complexity: 'simple' as const,
-    user_level: 'junior' as const,
-    data_volume: 50000,
-    frequency: 'quotidien' as const,
-    environment: 'prod' as const,
-    type_flux: 'job ETL' as const,
-    flow_type: 'asynchrone' as const,
-    max_transcodifications: 1,
-    max_sources: 1,
-    max_targets: 1,
-    max_rules: 2,
-    architecture_pivot: false,
-    messaging_queue: true,
-    gestion_erreurs_techniques: true,
-    gestion_erreurs_fonctionnelles: false,
-    gestion_logs: true,
-    contract_completeness: 70,
-    comments: 'Extraction quotidienne des données de ventes vers le Data Warehouse',
-    estimated_days: 8,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    flows_systems: [{ system_id: 'demo-sys-3' }, { system_id: 'demo-sys-4' }],
-  },
-  {
-    id: 'demo-flow-3',
-    user_id: 'demo-user',
-    name: 'Synchronisation Produits',
-    client: 'Client DEF',
-    tech: 'Talend' as const,
-    sources: 2,
-    targets: 1,
-    transformations: 8,
-    complexity: 'complexe' as const,
-    user_level: 'expert' as const,
-    data_volume: 200000,
-    frequency: 'hebdomadaire' as const,
-    environment: 'prod' as const,
-    type_flux: 'data service' as const,
-    flow_type: 'synchrone' as const,
-    max_transcodifications: 5,
-    max_sources: 2,
-    max_targets: 1,
-    max_rules: 10,
-    architecture_pivot: true,
-    messaging_queue: true,
-    gestion_erreurs_techniques: true,
-    gestion_erreurs_fonctionnelles: true,
-    gestion_logs: true,
-    contract_completeness: 90,
-    comments: 'Synchronisation des données produits entre les systèmes partenaires',
-    estimated_days: 12,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    flows_systems: [{ system_id: 'demo-sys-5' }, { system_id: 'demo-sys-6' }, { system_id: 'demo-sys-7' }],
-  },
 ];
 
 const demoSystems = [
-  { id: 'demo-sys-1', name: 'ERP Source' },
-  { id: 'demo-sys-2', name: 'ERP Cible' },
-  { id: 'demo-sys-3', name: 'Système Transactionnel' },
-  { id: 'demo-sys-4', name: 'Data Warehouse' },
-  { id: 'demo-sys-5', name: 'API Partenaire 1' },
-  { id: 'demo-sys-6', name: 'API Partenaire 2' },
-  { id: 'demo-sys-7', name: 'Système Interne' },
+  { id: 'demo-sys-1', name: 'CRM Salesforce' },
+  { id: 'demo-sys-2', name: 'ERP SAP' },
 ];
 
 export default async function FlowsPage() {
@@ -165,69 +96,39 @@ export default async function FlowsPage() {
             </div>
           </div>
           
-          <div className="space-y-6">
-            <div className="bg-muted/50 rounded-lg p-6 border border-border">
-              <h3 className="text-xl font-semibold text-foreground mb-4">Tutoriel : Comment créer et utiliser un flux</h3>
-              <div className="space-y-4">
-                <div className="flex items-start space-x-3">
+          <div className="space-y-8">
+            <div className="bg-muted/50 rounded-lg p-6 md:p-8 border border-border">
+              <h3 className="text-xl font-semibold text-foreground mb-6">Fonctionnement d'un flux</h3>
+              <div className="space-y-6">
+                <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-primary font-bold text-sm">1</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground mb-1">Créer un flux</h4>
-                    <p className="text-muted-foreground">
-                      Cliquez sur "+ Nouveau flux" et renseignez les informations de base : nom, description,
-                      technologie (Talend ou Blueway), et les systèmes sources et cibles associés.
+                    <h4 className="font-semibold text-foreground mb-1"></h4>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Les flux de données représentent le code créé pour transformer les données d'un système source vers un système cible. 
+                      <br />La forme de chaque flux (ETL, ESB, API, Services) est unique et la granularité est définie au cas par cas.
                     </p>
                   </div>
                 </div>
-                <div className="flex items-start space-x-3">
+                <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                     <span className="text-primary font-bold text-sm">2</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-foreground mb-1">Configurer les paramètres</h4>
-                    <p className="text-muted-foreground">
-                      Définissez la complexité du flux, le nombre de sources et cibles, les volumes de données,
-                      la fréquence d'exécution, et autres paramètres qui influencent l'estimation.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-primary font-bold text-sm">3</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-1">Obtenir l'estimation</h4>
-                    <p className="text-muted-foreground">
-                      L'algorithme calcule automatiquement l'estimation en jours-homme avec une répartition
-                      par phase : développement, tests, déploiement et maintenance.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                    <span className="text-primary font-bold text-sm">4</span>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-foreground mb-1">Sauvegarder et exporter</h4>
-                    <p className="text-muted-foreground">
-                      Enregistrez votre flux et exportez vos estimations en PDF ou CSV pour vos rapports
-                      et présentations.
+                    <h4 className="font-semibold text-foreground mb-1"></h4>
+                    <p className="text-muted-foreground leading-relaxed">
+                      Les flux peuvent être associés à un ou plusieurs systèmes / interfaces d'un projet.
+                      <br />Par exemple : un flux ETL reliant le CRM "Salesforce" et l'ERP "SAP", pourra être associé à ces 2 systèmes.
                     </p>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-              <span>💡</span>
-              <span>
-                Mode démo : Vous visualisez des données d'exemple. 
-                <Link href="/signup" className="ml-1 text-primary hover:underline font-medium">
-                  Inscrivez-vous
-                </Link>
-                {' '}pour créer vos propres flux.
-              </span>
+            <div className="flex items-center space-x-4 text-sm text-muted-foreground bg-primary/5 rounded-lg p-4 border border-primary/10">
+              <span className="text-lg">💡</span>
+              <span>Connectez-vous pour accéder à la page Flux et commencer à créer vos flux</span>
             </div>
           </div>
         </div>

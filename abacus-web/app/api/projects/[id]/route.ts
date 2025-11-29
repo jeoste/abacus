@@ -101,6 +101,36 @@ export async function DELETE(
       );
     }
 
+    // Vérifier que le projet appartient à l'utilisateur
+    const { data: project } = await supabase
+      .from('projects')
+      .select('id')
+      .eq('id', params.id)
+      .eq('user_id', user.id)
+      .single();
+
+    if (!project) {
+      return NextResponse.json(
+        { error: 'Projet non trouvé ou non autorisé.' },
+        { status: 404 }
+      );
+    }
+
+    // Délier les systèmes du projet (mettre project_id à NULL) au lieu de les supprimer
+    const { error: unlinkError } = await supabase
+      .from('systems')
+      .update({ project_id: null })
+      .eq('project_id', params.id)
+      .eq('user_id', user.id);
+
+    if (unlinkError) {
+      return NextResponse.json(
+        { error: `Erreur lors du déliage des systèmes: ${unlinkError.message}` },
+        { status: 500 }
+      );
+    }
+
+    // Supprimer uniquement le projet (les systèmes et flux restent intacts)
     const { error } = await supabase
       .from('projects')
       .delete()

@@ -27,11 +27,7 @@ export default function SystemForm({ system, projects }: SystemFormProps) {
     setLoading(true);
     setError(null);
 
-    if (!formData.project_id) {
-      setError('Veuillez sélectionner un projet');
-      setLoading(false);
-      return;
-    }
+    // project_id est maintenant optionnel, pas besoin de vérification
 
     try {
       const url = system ? `/api/systems/${system.id}` : '/api/systems';
@@ -68,23 +64,25 @@ export default function SystemForm({ system, projects }: SystemFormProps) {
 
       <div>
         <label htmlFor="project_id" className="block text-sm font-medium text-foreground mb-2">
-          Projet *
+          Projet (optionnel)
         </label>
         <select
           id="project_id"
           value={formData.project_id}
           onChange={(e) => setFormData({ ...formData, project_id: e.target.value })}
-          required
           disabled={!!system || !!projectIdParam}
           className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground disabled:opacity-50"
         >
-          <option value="">Sélectionner un projet</option>
+          <option value="">Aucun projet (système indépendant)</option>
           {projects.map((project) => (
             <option key={project.id} value={project.id}>
               {project.name}
             </option>
           ))}
         </select>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Vous pouvez créer un système sans le lier à un projet
+        </p>
       </div>
 
       <div>

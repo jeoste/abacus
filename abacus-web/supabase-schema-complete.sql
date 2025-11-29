@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS public.projects (
 CREATE TABLE IF NOT EXISTS public.systems (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   user_id UUID REFERENCES public.profiles(id) ON DELETE CASCADE NOT NULL,
-  project_id UUID REFERENCES public.projects(id) ON DELETE CASCADE NOT NULL,
+  project_id UUID REFERENCES public.projects(id) ON DELETE SET NULL,
   name TEXT NOT NULL,
   description TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()) NOT NULL,
@@ -146,24 +146,37 @@ ALTER TABLE public.systems ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.flows ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.flows_systems ENABLE ROW LEVEL SECURITY;
 
--- Supprimer les anciennes policies si elles existent (pour réinitialisation propre)
-DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
-DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
-DROP POLICY IF EXISTS "Users can view own projects" ON public.projects;
-DROP POLICY IF EXISTS "Users can create own projects" ON public.projects;
-DROP POLICY IF EXISTS "Users can update own projects" ON public.projects;
-DROP POLICY IF EXISTS "Users can delete own projects" ON public.projects;
-DROP POLICY IF EXISTS "Users can view own systems" ON public.systems;
-DROP POLICY IF EXISTS "Users can create own systems" ON public.systems;
-DROP POLICY IF EXISTS "Users can update own systems" ON public.systems;
-DROP POLICY IF EXISTS "Users can delete own systems" ON public.systems;
-DROP POLICY IF EXISTS "Users can view own flows" ON public.flows;
-DROP POLICY IF EXISTS "Users can create own flows" ON public.flows;
-DROP POLICY IF EXISTS "Users can update own flows" ON public.flows;
-DROP POLICY IF EXISTS "Users can delete own flows" ON public.flows;
-DROP POLICY IF EXISTS "Users can view own flows_systems" ON public.flows_systems;
-DROP POLICY IF EXISTS "Users can create own flows_systems" ON public.flows_systems;
-DROP POLICY IF EXISTS "Users can delete own flows_systems" ON public.flows_systems;
+-- Supprimer TOUTES les policies existantes pour une réinitialisation propre
+-- Cette approche garantit qu'il n'y a pas de conflit lors de la création
+DO $$
+DECLARE
+  r RECORD;
+BEGIN
+  -- Supprimer toutes les policies de profiles
+  FOR r IN (SELECT policyname FROM pg_policies WHERE schemaname = 'public' AND tablename = 'profiles') LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON public.profiles', r.policyname);
+  END LOOP;
+  
+  -- Supprimer toutes les policies de projects
+  FOR r IN (SELECT policyname FROM pg_policies WHERE schemaname = 'public' AND tablename = 'projects') LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON public.projects', r.policyname);
+  END LOOP;
+  
+  -- Supprimer toutes les policies de systems
+  FOR r IN (SELECT policyname FROM pg_policies WHERE schemaname = 'public' AND tablename = 'systems') LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON public.systems', r.policyname);
+  END LOOP;
+  
+  -- Supprimer toutes les policies de flows
+  FOR r IN (SELECT policyname FROM pg_policies WHERE schemaname = 'public' AND tablename = 'flows') LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON public.flows', r.policyname);
+  END LOOP;
+  
+  -- Supprimer toutes les policies de flows_systems
+  FOR r IN (SELECT policyname FROM pg_policies WHERE schemaname = 'public' AND tablename = 'flows_systems') LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON public.flows_systems', r.policyname);
+  END LOOP;
+END $$;
 
 -- Policies pour profiles
 CREATE POLICY "Users can view own profile"

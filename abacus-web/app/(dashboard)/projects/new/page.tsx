@@ -4,9 +4,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
+import { useToast } from '@/components/ui/Toaster';
 
 export default function NewProjectPage() {
   const router = useRouter();
+  const { showSuccess, showError } = useToast();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
@@ -44,9 +46,16 @@ export default function NewProjectPage() {
       }
 
       const project = await response.json();
-      router.push(`/projects/${project.id}`);
+      showSuccess('Projet créé avec succès !');
+      
+      // Petit délai pour que l'utilisateur voie le toast avant la redirection
+      setTimeout(() => {
+        router.push(`/projects/${project.id}`);
+      }, 500);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      const errorMessage = err instanceof Error ? err.message : 'Une erreur est survenue';
+      setError(errorMessage);
+      showError(errorMessage);
     } finally {
       setLoading(false);
     }
