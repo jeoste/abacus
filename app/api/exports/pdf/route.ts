@@ -115,7 +115,7 @@ export async function GET(request: Request) {
       });
       y -= lineHeight;
       const commentsLines = flow.comments.split('\n');
-      commentsLines.forEach((line) => {
+      commentsLines.forEach((line: string) => {
         if (y < 100) {
           const newPage = pdfDoc.addPage([595, 842]);
           y = 800;
@@ -131,7 +131,7 @@ export async function GET(request: Request) {
     }
 
     const pdfBytes = await pdfDoc.save();
-    return new NextResponse(pdfBytes, {
+    return new NextResponse(Buffer.from(pdfBytes), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="flux-${flow.name.replace(/[^a-z0-9]/gi, '_')}-${new Date().toISOString().split('T')[0]}.pdf"`,
@@ -198,7 +198,7 @@ export async function GET(request: Request) {
     });
 
     const pdfBytes = await pdfDoc.save();
-    return new NextResponse(pdfBytes, {
+    return new NextResponse(Buffer.from(pdfBytes), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="abaques-tous-les-flux-${new Date().toISOString().split('T')[0]}.pdf"`,

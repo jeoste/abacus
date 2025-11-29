@@ -27,8 +27,8 @@ export default async function EditFlowPage({
     notFound();
   }
 
-  const { data: systems } = await supabase
-    .from('systems')
+  const { data: interfaces } = await supabase
+    .from('interfaces')
     .select('*')
     .eq('user_id', user.id)
     .order('created_at', { ascending: false });
@@ -41,7 +41,7 @@ export default async function EditFlowPage({
       </div>
 
       <div className="bg-card rounded-xl shadow-sm p-6 border border-border">
-        <FlowForm flow={flow} systems={systems || []} />
+        <FlowForm flow={flow} interfaces={interfaces || []} />
       </div>
     </div>
   );

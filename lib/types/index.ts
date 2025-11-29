@@ -33,6 +33,7 @@ export type Interface = System;
 export interface Flow {
   id: string;
   user_id: string;
+  interface_id?: string | null;
   name: string;
   client?: string | null;
   tech: Tech;
