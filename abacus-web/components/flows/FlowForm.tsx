@@ -224,9 +224,9 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               onChange={(e) => setFormData({ ...formData, user_level: e.target.value as UserLevel })}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option value="junior">👶 Junior (0-2 ans)</option>
-              <option value="confirmé">⚡ Confirmé (2-5 ans)</option>
-              <option value="expert">🚀 Expert (5+ ans)</option>
+              <option value="junior">Junior (0-2 ans)</option>
+              <option value="confirmé">Confirmé (2-5 ans)</option>
+              <option value="expert">Expert (5+ ans)</option>
             </select>
           </div>
 

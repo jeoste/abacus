@@ -36,13 +36,15 @@ export async function middleware(request: NextRequest) {
       request.nextUrl.pathname.startsWith('/interfaces') ||
       request.nextUrl.pathname.startsWith('/exports')) {
     if (!user) {
-      return NextResponse.redirect(new URL('/login', request.url));
+      const returnTo = request.nextUrl.pathname;
+      return NextResponse.redirect(new URL(`/login?returnTo=${encodeURIComponent(returnTo)}`, request.url));
     }
   }
 
   // Rediriger les utilisateurs connectés depuis login/signup
   if ((request.nextUrl.pathname === '/login' || request.nextUrl.pathname === '/signup') && user) {
-    return NextResponse.redirect(new URL('/flows', request.url));
+    const returnTo = request.nextUrl.searchParams.get('returnTo') || '/flows';
+    return NextResponse.redirect(new URL(returnTo, request.url));
   }
 
   return supabaseResponse;
@@ -53,4 +55,3 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
   ],
 };
-
