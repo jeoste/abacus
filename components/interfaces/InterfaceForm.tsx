@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/Toaster';
 import type { Interface } from '@/lib/types';
 
 interface InterfaceFormProps {
@@ -10,8 +11,8 @@ interface InterfaceFormProps {
 
 export default function InterfaceForm({ interface: interfaceItem }: InterfaceFormProps) {
   const router = useRouter();
+  const { showSuccess, showError } = useToast();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: interfaceItem?.name || '',
     description: interfaceItem?.description || '',
@@ -20,7 +21,6 @@ export default function InterfaceForm({ interface: interfaceItem }: InterfaceFor
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     try {
       const url = interfaceItem ? `/api/interfaces/${interfaceItem.id}` : '/api/interfaces';
@@ -39,22 +39,17 @@ export default function InterfaceForm({ interface: interfaceItem }: InterfaceFor
         throw new Error(data.error || 'Erreur lors de la sauvegarde');
       }
 
+      showSuccess(interfaceItem ? 'Interface modifiée avec succès' : 'Interface créée avec succès');
       router.push('/interfaces');
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      showError(err instanceof Error ? err.message : 'Une erreur est survenue');
       setLoading(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          {error}
-        </div>
-      )}
-
       <div>
         <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
           Nom de l'interface *

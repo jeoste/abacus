@@ -42,15 +42,15 @@ function SignupForm() {
     } else if (data.user) {
       // Attendre un peu pour que le trigger SQL s'exécute
       await new Promise(resolve => setTimeout(resolve, 500));
-      
+
       // Essayer de créer le profil côté client (si la session est établie)
       // Si ça échoue, le trigger SQL devrait l'avoir créé automatiquement
       const { data: { session } } = await supabase.auth.getSession();
-      
+
       if (session) {
         // La session est établie, on peut essayer de créer le profil
         const { error: profileError } = await ensureUserProfile(supabase, data.user);
-        
+
         if (profileError) {
           // Si la création échoue, le trigger SQL devrait avoir créé le profil
           // On continue quand même car le profil devrait exister
@@ -61,7 +61,7 @@ function SignupForm() {
         // La session n'est pas encore établie, le trigger SQL créera le profil
         console.log('Session non établie, le profil sera créé par le trigger SQL');
       }
-      
+
       // Compte créé avec succès
       // Le profil sera créé par le trigger SQL ou par ensureUserProfile
       setSuccess(true);
@@ -79,7 +79,7 @@ function SignupForm() {
         router.push('/');
         router.refresh();
       }, 5000);
-      
+
       return () => clearTimeout(timer);
     }
   }, [success, router]);
@@ -102,7 +102,7 @@ function SignupForm() {
         <div className="text-center">
           <Link
             href="/"
-            className="inline-block w-full bg-primary text-primary-foreground py-2 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors shadow-sm font-medium text-center"
+            className="inline-block w-full bg-action text-action-foreground py-2 px-4 rounded-lg hover:bg-action/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors shadow-sm font-medium text-center"
           >
             Aller à l'accueil
           </Link>
@@ -169,7 +169,7 @@ function SignupForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm font-medium"
+        className="w-full bg-action text-action-foreground py-2 px-4 rounded-lg hover:bg-action/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm font-medium"
       >
         {loading ? 'Inscription...' : "S'inscrire"}
       </button>

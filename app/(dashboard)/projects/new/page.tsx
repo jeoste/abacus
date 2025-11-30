@@ -47,7 +47,7 @@ export default function NewProjectPage() {
 
       const project = await response.json();
       showSuccess('Projet créé avec succès !');
-      
+
       // Petit délai pour que l'utilisateur voie le toast avant la redirection
       setTimeout(() => {
         router.push(`/projects/${project.id}`);
@@ -115,7 +115,7 @@ export default function NewProjectPage() {
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium disabled:opacity-50"
+              className="px-6 py-2 bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-colors shadow-sm font-medium disabled:opacity-50"
             >
               {loading ? 'Création...' : 'Créer le projet'}
             </button>

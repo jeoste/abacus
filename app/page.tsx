@@ -7,6 +7,7 @@ import ThemeToggle from '@/components/ThemeToggle';
 import UserInfo from '@/components/UserInfo';
 import LandingPage from '@/components/landing/LandingPage';
 import { createClient } from '@/lib/supabase/client';
+import Logo from '@/components/Logo';
 
 const navItems = [
   {
@@ -49,9 +50,7 @@ export default function HomePage() {
           <div className="flex items-center justify-between gap-6">
             <div className="flex items-center gap-8 min-w-0">
               <Link href="/" className="flex items-center space-x-3 shrink-0">
-                <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                  <span className="text-primary-foreground font-bold text-sm">A</span>
-                </div>
+                <Logo showText={false} />
                 <span className="text-xl font-bold text-foreground hidden sm:inline">
                   Abacus
                 </span>
@@ -102,7 +101,7 @@ export default function HomePage() {
                   </Link>
                   <Link
                     href="/signup"
-                    className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm"
+                    className="px-4 py-2 text-sm font-medium bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-colors shadow-sm"
                   >
                     S'inscrire
                   </Link>

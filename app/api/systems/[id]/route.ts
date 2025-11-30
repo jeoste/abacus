@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 
 export async function GET(
   request: Request,
@@ -97,6 +98,7 @@ export async function PUT(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    revalidatePath('/systems');
     return NextResponse.json(data);
   } catch (error) {
     return NextResponse.json(
@@ -134,6 +136,7 @@ export async function DELETE(
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    revalidatePath('/systems');
     return NextResponse.json({ success: true });
   } catch (error) {
     return NextResponse.json(

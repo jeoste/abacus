@@ -1,6 +1,8 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/Toaster';
 import type { Flow, System } from '@/lib/types';
 
 interface FlowTableProps {
@@ -10,6 +12,9 @@ interface FlowTableProps {
 }
 
 export default function FlowTable({ flows, systems, isDemo = false }: FlowTableProps) {
+  const router = useRouter();
+  const { showSuccess, showError } = useToast();
+
   const getSystemNames = (flow: Flow) => {
     // Récupérer les systèmes associés via flows_systems
     const flowSystems = (flow as any).flows_systems || [];
@@ -25,14 +30,19 @@ export default function FlowTable({ flows, systems, isDemo = false }: FlowTableP
       return;
     }
 
-    const response = await fetch(`/api/flows/${id}`, {
-      method: 'DELETE',
-    });
+    try {
+      const response = await fetch(`/api/flows/${id}`, {
+        method: 'DELETE',
+      });
 
-    if (response.ok) {
-      window.location.reload();
-    } else {
-      alert('Erreur lors de la suppression');
+      if (response.ok) {
+        showSuccess('Flux supprimé avec succès');
+        router.refresh();
+      } else {
+        throw new Error('Erreur lors de la suppression');
+      }
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Erreur lors de la suppression');
     }
   };
 
@@ -102,10 +112,10 @@ export default function FlowTable({ flows, systems, isDemo = false }: FlowTableP
               <td className="px-6 py-4 whitespace-nowrap">
                 <span
                   className={`px-2 py-1 text-xs font-semibold rounded-full ${flow.complexity === 'simple'
-                      ? 'bg-secondary text-foreground'
-                      : flow.complexity === 'modérée'
-                        ? 'bg-accent text-accent-foreground'
-                        : 'bg-destructive/10 text-destructive'
+                    ? 'bg-secondary text-foreground'
+                    : flow.complexity === 'modérée'
+                      ? 'bg-accent text-accent-foreground'
+                      : 'bg-destructive/10 text-destructive'
                     }`}
                 >
                   {flow.complexity}
@@ -148,4 +158,3 @@ export default function FlowTable({ flows, systems, isDemo = false }: FlowTableP
     </div>
   );
 }
-

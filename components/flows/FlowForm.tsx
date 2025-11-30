@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/Toaster';
 import type { Flow, Interface, Tech, Complexity, UserLevel, Frequency, Environment, FlowType, TypeFlux } from '@/lib/types';
 
 interface FlowFormProps {
@@ -11,8 +12,8 @@ interface FlowFormProps {
 
 export default function FlowForm({ flow, interfaces }: FlowFormProps) {
   const router = useRouter();
+  const { showSuccess, showError } = useToast();
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: flow?.name || '',
     client: flow?.client || '',
@@ -44,7 +45,6 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     try {
       const url = flow ? `/api/flows/${flow.id}` : '/api/flows';
@@ -63,27 +63,22 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
         throw new Error(data.error || 'Erreur lors de la sauvegarde');
       }
 
+      showSuccess(flow ? 'Flux modifié avec succès' : 'Flux créé avec succès');
       router.push('/flows');
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      showError(err instanceof Error ? err.message : 'Une erreur est survenue');
       setLoading(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-          {error}
-        </div>
-      )}
-
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Informations principales</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Informations principales</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="tech" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="tech" className="block text-sm font-medium text-foreground mb-2">
               Technologie *
             </label>
             <select
@@ -91,7 +86,7 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               value={formData.tech}
               onChange={(e) => setFormData({ ...formData, tech: e.target.value as Tech })}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             >
               <option value="Talend">Talend</option>
               <option value="Blueway">Blueway</option>
@@ -99,7 +94,7 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
           </div>
 
           <div>
-            <label htmlFor="client" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="client" className="block text-sm font-medium text-foreground mb-2">
               Client
             </label>
             <input
@@ -107,20 +102,20 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               type="text"
               value={formData.client}
               onChange={(e) => setFormData({ ...formData, client: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground placeholder:text-muted-foreground"
               placeholder="ex: Meta, Amazon, etc."
             />
           </div>
 
           <div>
-            <label htmlFor="interface_id" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="interface_id" className="block text-sm font-medium text-foreground mb-2">
               Interface parente
             </label>
             <select
               id="interface_id"
               value={formData.interface_id}
               onChange={(e) => setFormData({ ...formData, interface_id: e.target.value })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             >
               <option value="">Aucune</option>
               {interfaces.map((int) => (
@@ -132,7 +127,7 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
           </div>
 
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="name" className="block text-sm font-medium text-foreground mb-2">
               Nom du flux *
             </label>
             <input
@@ -141,7 +136,7 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground placeholder:text-muted-foreground"
               placeholder="ex: Salesforce vers Base de données"
             />
           </div>
@@ -149,10 +144,10 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Caractéristiques</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Caractéristiques</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="sources" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="sources" className="block text-sm font-medium text-foreground mb-2">
               Nombre de sources *
             </label>
             <input
@@ -163,12 +158,12 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               value={formData.sources}
               onChange={(e) => setFormData({ ...formData, sources: parseInt(e.target.value) || 1 })}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             />
           </div>
 
           <div>
-            <label htmlFor="targets" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="targets" className="block text-sm font-medium text-foreground mb-2">
               Nombre de cibles *
             </label>
             <input
@@ -179,12 +174,12 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               value={formData.targets}
               onChange={(e) => setFormData({ ...formData, targets: parseInt(e.target.value) || 1 })}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             />
           </div>
 
           <div>
-            <label htmlFor="transformations" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="transformations" className="block text-sm font-medium text-foreground mb-2">
               Transformations
             </label>
             <input
@@ -194,19 +189,19 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               max="50"
               value={formData.transformations}
               onChange={(e) => setFormData({ ...formData, transformations: parseInt(e.target.value) || 0 })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             />
           </div>
 
           <div>
-            <label htmlFor="complexity" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="complexity" className="block text-sm font-medium text-foreground mb-2">
               Complexité
             </label>
             <select
               id="complexity"
               value={formData.complexity}
               onChange={(e) => setFormData({ ...formData, complexity: e.target.value as Complexity })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             >
               <option value="simple">Simple</option>
               <option value="modérée">Modérée</option>
@@ -215,14 +210,14 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
           </div>
 
           <div>
-            <label htmlFor="user_level" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="user_level" className="block text-sm font-medium text-foreground mb-2">
               Niveau d'expertise
             </label>
             <select
               id="user_level"
               value={formData.user_level}
               onChange={(e) => setFormData({ ...formData, user_level: e.target.value as UserLevel })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             >
               <option value="junior">Junior (0-2 ans)</option>
               <option value="confirmé">Confirmé (2-5 ans)</option>
@@ -231,14 +226,14 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
           </div>
 
           <div>
-            <label htmlFor="type_flux" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="type_flux" className="block text-sm font-medium text-foreground mb-2">
               Type de flux
             </label>
             <select
               id="type_flux"
               value={formData.type_flux}
               onChange={(e) => setFormData({ ...formData, type_flux: e.target.value as TypeFlux })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             >
               <option value="job ETL">Job ETL</option>
               <option value="route">Route</option>
@@ -248,14 +243,14 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
           </div>
 
           <div>
-            <label htmlFor="flow_type" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="flow_type" className="block text-sm font-medium text-foreground mb-2">
               Opération
             </label>
             <select
               id="flow_type"
               value={formData.flow_type}
               onChange={(e) => setFormData({ ...formData, flow_type: e.target.value as FlowType })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             >
               <option value="synchrone">Synchrone (S)</option>
               <option value="asynchrone">Asynchrone (A)</option>
@@ -265,10 +260,10 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Options avancées</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Options avancées</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label htmlFor="data_volume" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="data_volume" className="block text-sm font-medium text-foreground mb-2">
               Volume de données (MB)
             </label>
             <input
@@ -277,19 +272,19 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               min="1"
               value={formData.data_volume}
               onChange={(e) => setFormData({ ...formData, data_volume: parseInt(e.target.value) || 100 })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             />
           </div>
 
           <div>
-            <label htmlFor="frequency" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="frequency" className="block text-sm font-medium text-foreground mb-2">
               Fréquence
             </label>
             <select
               id="frequency"
               value={formData.frequency}
               onChange={(e) => setFormData({ ...formData, frequency: e.target.value as Frequency })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             >
               <option value="unique">Unique</option>
               <option value="quotidien">Quotidien</option>
@@ -299,14 +294,14 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
           </div>
 
           <div>
-            <label htmlFor="environment" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="environment" className="block text-sm font-medium text-foreground mb-2">
               Environnement
             </label>
             <select
               id="environment"
               value={formData.environment}
               onChange={(e) => setFormData({ ...formData, environment: e.target.value as Environment })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             >
               <option value="dev">Développement</option>
               <option value="test">Test</option>
@@ -315,7 +310,7 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
           </div>
 
           <div>
-            <label htmlFor="contract_completeness" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="contract_completeness" className="block text-sm font-medium text-foreground mb-2">
               Complétude du contrat d'interface (%)
             </label>
             <input
@@ -326,13 +321,13 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               value={formData.contract_completeness}
               onChange={(e) => setFormData({ ...formData, contract_completeness: parseInt(e.target.value) || 0 })}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             />
-            <p className="mt-1 text-sm text-gray-500">Indiquez le pourcentage de complétude (0 à 100)</p>
+            <p className="mt-1 text-sm text-muted-foreground">Indiquez le pourcentage de complétude (0 à 100)</p>
           </div>
 
           <div>
-            <label htmlFor="max_transcodifications" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="max_transcodifications" className="block text-sm font-medium text-foreground mb-2">
               Nombre maximum de transcodifications
             </label>
             <input
@@ -342,12 +337,12 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               max="100"
               value={formData.max_transcodifications}
               onChange={(e) => setFormData({ ...formData, max_transcodifications: parseInt(e.target.value) || 0 })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             />
           </div>
 
           <div>
-            <label htmlFor="max_sources" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="max_sources" className="block text-sm font-medium text-foreground mb-2">
               Nombre maximum de source(s)
             </label>
             <input
@@ -357,12 +352,12 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               max="50"
               value={formData.max_sources}
               onChange={(e) => setFormData({ ...formData, max_sources: parseInt(e.target.value) || 1 })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             />
           </div>
 
           <div>
-            <label htmlFor="max_targets" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="max_targets" className="block text-sm font-medium text-foreground mb-2">
               Nombre maximum de cible(s)
             </label>
             <input
@@ -372,12 +367,12 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               max="50"
               value={formData.max_targets}
               onChange={(e) => setFormData({ ...formData, max_targets: parseInt(e.target.value) || 1 })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             />
           </div>
 
           <div>
-            <label htmlFor="max_rules" className="block text-sm font-medium text-gray-700 mb-2">
+            <label htmlFor="max_rules" className="block text-sm font-medium text-foreground mb-2">
               Nombre maximum de règles (gestion/métier)
             </label>
             <input
@@ -387,23 +382,23 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               max="100"
               value={formData.max_rules}
               onChange={(e) => setFormData({ ...formData, max_rules: parseInt(e.target.value) || 0 })}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground"
             />
           </div>
         </div>
       </div>
 
       <div>
-        <h3 className="text-lg font-semibold text-gray-800 mb-4">Options</h3>
+        <h3 className="text-lg font-semibold text-foreground mb-4">Options</h3>
         <div className="space-y-3">
           <label className="flex items-center">
             <input
               type="checkbox"
               checked={formData.architecture_pivot}
               onChange={(e) => setFormData({ ...formData, architecture_pivot: e.target.checked })}
-              className="mr-2"
+              className="mr-2 rounded border-input text-primary focus:ring-ring"
             />
-            <span className="text-sm text-gray-700">Architecture pivot</span>
+            <span className="text-sm text-foreground">Architecture pivot</span>
           </label>
 
           <label className="flex items-center">
@@ -411,9 +406,9 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               type="checkbox"
               checked={formData.messaging_queue}
               onChange={(e) => setFormData({ ...formData, messaging_queue: e.target.checked })}
-              className="mr-2"
+              className="mr-2 rounded border-input text-primary focus:ring-ring"
             />
-            <span className="text-sm text-gray-700">Messaging queue</span>
+            <span className="text-sm text-foreground">Messaging queue</span>
           </label>
 
           <label className="flex items-center">
@@ -421,9 +416,9 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               type="checkbox"
               checked={formData.gestion_erreurs_techniques}
               onChange={(e) => setFormData({ ...formData, gestion_erreurs_techniques: e.target.checked })}
-              className="mr-2"
+              className="mr-2 rounded border-input text-primary focus:ring-ring"
             />
-            <span className="text-sm text-gray-700">Gestion des erreurs techniques</span>
+            <span className="text-sm text-foreground">Gestion des erreurs techniques</span>
           </label>
 
           <label className="flex items-center">
@@ -431,9 +426,9 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               type="checkbox"
               checked={formData.gestion_erreurs_fonctionnelles}
               onChange={(e) => setFormData({ ...formData, gestion_erreurs_fonctionnelles: e.target.checked })}
-              className="mr-2"
+              className="mr-2 rounded border-input text-primary focus:ring-ring"
             />
-            <span className="text-sm text-gray-700">Gestion des erreurs fonctionnelles</span>
+            <span className="text-sm text-foreground">Gestion des erreurs fonctionnelles</span>
           </label>
 
           <label className="flex items-center">
@@ -441,15 +436,15 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
               type="checkbox"
               checked={formData.gestion_logs}
               onChange={(e) => setFormData({ ...formData, gestion_logs: e.target.checked })}
-              className="mr-2"
+              className="mr-2 rounded border-input text-primary focus:ring-ring"
             />
-            <span className="text-sm text-gray-700">Gestion des logs</span>
+            <span className="text-sm text-foreground">Gestion des logs</span>
           </label>
         </div>
       </div>
 
       <div>
-        <label htmlFor="comments" className="block text-sm font-medium text-gray-700 mb-2">
+        <label htmlFor="comments" className="block text-sm font-medium text-foreground mb-2">
           Commentaires détaillés
         </label>
         <textarea
@@ -457,7 +452,7 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
           rows={6}
           value={formData.comments}
           onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring bg-background text-foreground placeholder:text-muted-foreground"
           placeholder="Ajoutez ici vos remarques, hypothèses, justifications, etc."
         />
       </div>
@@ -466,14 +461,14 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+          className="px-6 py-2 border border-input bg-background text-foreground rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors font-medium"
         >
           Annuler
         </button>
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="px-6 py-2 bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-colors shadow-sm font-medium disabled:opacity-50"
         >
           {loading ? 'Enregistrement...' : flow ? 'Mettre à jour' : 'Créer'}
         </button>
@@ -481,4 +476,3 @@ export default function FlowForm({ flow, interfaces }: FlowFormProps) {
     </form>
   );
 }
-

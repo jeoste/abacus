@@ -4,6 +4,9 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import ThemeToggle from '@/components/ThemeToggle';
 import UserInfo from '@/components/UserInfo';
+import Logo from '@/components/Logo';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
 interface DashboardHeaderProps {
   email?: string;
@@ -32,61 +35,55 @@ export default function DashboardHeader({ email, fullName }: DashboardHeaderProp
   const pathname = usePathname();
 
   return (
-    <header className="bg-background/95 backdrop-blur-md border-b border-border sticky top-0 z-20 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <div className="flex items-center justify-between gap-6">
-          <div className="flex items-center gap-8 min-w-0">
-            <Link href="/" className="flex items-center space-x-3 shrink-0 hover:opacity-80 transition-opacity">
-              <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center shadow-sm">
-                <span className="text-primary-foreground font-bold text-sm">A</span>
-              </div>
-              <span className="text-xl font-bold text-foreground hidden sm:inline">
-                Abacus
-              </span>
-            </Link>
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 max-w-screen-2xl items-center justify-between px-4 md:px-8">
+        <div className="flex items-center gap-8">
+          <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
+            <Logo size={28} showText={false} />
+            <span className="text-lg font-semibold tracking-tight text-foreground hidden sm:inline-block">
+              Abacus
+            </span>
+          </Link>
 
-            <nav className="flex items-center gap-2 text-sm font-medium">
-              {navItems.map((item) => {
-                const active = item.isActive(pathname);
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={[
-                      'px-3 py-2 rounded-lg transition-all duration-200',
-                      active
-                        ? 'bg-primary/15 text-primary shadow-sm'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-accent/50',
-                    ].join(' ')}
-                  >
-                    {item.label}
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
+          <nav className="flex items-center gap-1">
+            {navItems.map((item) => {
+              const active = item.isActive(pathname);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={cn(
+                    "px-4 py-2 text-sm font-medium rounded-md transition-colors",
+                    active
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+                  )}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        </div>
 
-          <div className="flex items-center gap-3">
-            {/* Toggle thème à gauche du compte */}
-            <ThemeToggle />
+        <div className="flex items-center gap-4">
+          <ThemeToggle />
 
-            {/* Icône de compte en haut à droite */}
-            <UserInfo email={email} fullName={fullName} />
+          <div className="h-6 w-px bg-border/50 hidden sm:block" />
 
-            {/* Déconnexion */}
-            <form action="/auth/signout" method="post">
-              <button
-                type="submit"
-                className="hidden sm:inline-flex px-3 py-2 border border-input bg-background text-foreground rounded-lg hover:bg-accent hover:text-accent-foreground hover:border-accent-foreground/20 transition-all duration-200 text-sm font-medium"
-              >
-                Déconnexion
-              </button>
-            </form>
-          </div>
+          <UserInfo email={email} fullName={fullName} />
+
+          <form action="/auth/signout" method="post">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground hover:text-foreground hidden sm:inline-flex"
+            >
+              Déconnexion
+            </Button>
+          </form>
         </div>
       </div>
     </header>
   );
 }
-
-

@@ -104,7 +104,7 @@ export default async function ProjectDetailPage({
             <h3 className="text-xl font-semibold text-foreground">Systèmes</h3>
             <Link
               href={`/systems/new?project_id=${project.id}`}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium flex items-center space-x-2 text-sm"
+              className="px-4 py-2 bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-colors shadow-sm font-medium flex items-center space-x-2 text-sm"
             >
               <HiPlus className="w-4 h-4" />
               <span>Ajouter</span>
@@ -129,13 +129,7 @@ export default async function ProjectDetailPage({
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-muted-foreground mb-4">Aucun système dans ce projet</p>
-              <Link
-                href={`/systems/new?project_id=${project.id}`}
-                className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium text-sm"
-              >
-                Créer un système
-              </Link>
+              <p className="text-muted-foreground">Aucun système dans ce projet</p>
             </div>
           )}
         </div>
@@ -146,7 +140,7 @@ export default async function ProjectDetailPage({
             <h3 className="text-xl font-semibold text-foreground">Flux associés</h3>
             <Link
               href={`/flows/new?project_id=${project.id}`}
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium flex items-center space-x-2 text-sm"
+              className="px-4 py-2 bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-colors shadow-sm font-medium flex items-center space-x-2 text-sm"
             >
               <HiPlus className="w-4 h-4" />
               <span>Créer</span>
@@ -182,13 +176,7 @@ export default async function ProjectDetailPage({
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-muted-foreground mb-4">Aucun flux associé à ce projet</p>
-              <Link
-                href={`/flows/new?project_id=${project.id}`}
-                className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium text-sm"
-              >
-                Créer un flux
-              </Link>
+              <p className="text-muted-foreground">Aucun flux associé à ce projet</p>
             </div>
           )}
         </div>

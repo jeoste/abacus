@@ -38,11 +38,13 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-fade-in: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  --animate-scale-in: scaleIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 /*
   Palette Professionnelle & Moderne (Inspirée de Shadcn + Slate/Deep Blue)
-  Contraste élevé pour une meilleure accessibilité.
 */
 :root {
   --background: oklch(1 0 0);
@@ -54,11 +56,11 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.129 0.042 264.695);
 
-  /* Primary: Deep Blue/Slate - Trustworthy & Professional */
+  /* Primary: Deep Blue/Slate */
   --primary: oklch(0.208 0.042 265.755);
   --primary-foreground: oklch(0.985 0 0);
 
-  /* Secondary: Subtle Grey for less important actions */
+  /* Secondary: Subtle Grey */
   --secondary: oklch(0.968 0.007 247.896);
   --secondary-foreground: oklch(0.208 0.042 265.755);
 
@@ -68,7 +70,7 @@
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
 
-  /* Action: Dark Green for action buttons (Create, Submit, etc.) */
+  /* Action: Dark Green */
   --action: oklch(0.45 0.15 150);
   --action-foreground: oklch(0.985 0 0);
 
@@ -79,88 +81,110 @@
   --input: oklch(0.929 0.013 255.508);
   --ring: oklch(0.208 0.042 265.755);
 
-  --radius: 0.625rem;
+  --radius: 0.5rem;
 }
 
 .dark {
-  /* Fond gris très foncé */
-  --background: oklch(0.15 0 0);
-  --foreground: oklch(0.95 0 0);
+  --background: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.985 0 0);
 
-  --card: oklch(0.18 0 0);
-  --card-foreground: oklch(0.95 0 0);
+  --card: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.985 0 0);
 
-  --popover: oklch(0.18 0 0);
-  --popover-foreground: oklch(0.95 0 0);
+  --popover: oklch(0.129 0.042 264.695);
+  --popover-foreground: oklch(0.985 0 0);
 
-  /* Primary: Gris clair pour les boutons principaux */
-  --primary: oklch(0.85 0 0);
-  --primary-foreground: oklch(0.15 0 0);
+  --primary: oklch(0.985 0 0);
+  --primary-foreground: oklch(0.208 0.042 265.755);
 
-  /* Secondary: Gris moyen foncé */
-  --secondary: oklch(0.25 0 0);
-  --secondary-foreground: oklch(0.95 0 0);
+  --secondary: oklch(0.269 0.007 247.896);
+  --secondary-foreground: oklch(0.985 0 0);
 
-  /* Muted: Gris moyen */
-  --muted: oklch(0.25 0 0);
-  --muted-foreground: oklch(0.65 0 0);
+  --muted: oklch(0.269 0.007 247.896);
+  --muted-foreground: oklch(0.708 0.042 265.755);
 
-  /* Accent: Gris moyen clair */
-  --accent: oklch(0.30 0 0);
-  --accent-foreground: oklch(0.95 0 0);
+  --accent: oklch(0.269 0.007 247.896);
+  --accent-foreground: oklch(0.985 0 0);
 
-  /* Action: Lighter green for dark mode */
   --action: oklch(0.55 0.15 150);
   --action-foreground: oklch(0.95 0 0);
 
-  --destructive: oklch(0.55 0.15 25);
-  --destructive-foreground: oklch(0.95 0 0);
+  --destructive: oklch(0.396 0.141 25.723);
+  --destructive-foreground: oklch(0.985 0 0);
 
-  /* Bordures et inputs: Gris moyen */
-  --border: oklch(0.30 0 0);
-  --input: oklch(0.25 0 0);
-  --ring: oklch(0.60 0 0);
+  --border: oklch(0.269 0.007 247.896);
+  --input: oklch(0.269 0.007 247.896);
+  --ring: oklch(0.439 0 0);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-  font-feature-settings: "rlig" 1, "calt" 1;
-}
-
-@layer utilities {
-  .step {
-    counter-increment: step;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
 
-  .step:before {
-    @apply absolute w-9 h-9 bg-muted rounded-full font-mono font-medium text-center text-base inline-flex items-center justify-center -indent-px border-4 border-background;
-    @apply ml-[-50px] mt-[-4px];
-    content: counter(step);
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  .container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container {
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .container {
+      max-width: 768px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container {
+      max-width: 1024px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .container {
+      max-width: 1280px;
+    }
+  }
+
+  @media (min-width: 1536px) {
+    .container {
+      max-width: 1536px;
+    }
   }
 }
 
-@keyframes slideIn {
+@keyframes fadeIn {
   from {
-    transform: translateX(100%);
     opacity: 0;
+    transform: translateY(10px);
   }
 
   to {
-    transform: translateX(0);
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-@keyframes slideOut {
+@keyframes scaleIn {
   from {
-    transform: translateX(0);
-    opacity: 1;
+    opacity: 0;
+    transform: scale(0.95);
   }
 
   to {
-    transform: translateX(100%);
-    opacity: 0;
+    opacity: 1;
+    transform: scale(1);
   }
 }

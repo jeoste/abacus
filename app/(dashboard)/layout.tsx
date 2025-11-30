@@ -4,6 +4,7 @@ import DashboardHeader from '@/components/DashboardHeader';
 import Link from 'next/link';
 import ThemeToggle from '@/components/ThemeToggle';
 import UserInfo from '@/components/UserInfo';
+import Logo from '@/components/Logo';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const supabase = await createClient();
@@ -12,8 +13,8 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   } = await supabase.auth.getUser();
 
   // Permettre l'accès en mode démo pour les pages publiques
-  const isPublicPage = typeof window === 'undefined' 
-    ? false 
+  const isPublicPage = typeof window === 'undefined'
+    ? false
     : false; // On vérifiera dans les pages individuelles
 
   return (
@@ -29,9 +30,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
             <div className="flex items-center justify-between gap-6">
               <div className="flex items-center gap-8 min-w-0">
                 <Link href="/" className="flex items-center space-x-3 shrink-0">
-                  <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                    <span className="text-primary-foreground font-bold text-sm">A</span>
-                  </div>
+                  <Logo showText={false} />
                   <span className="text-xl font-bold text-foreground hidden sm:inline">
                     Abacus
                   </span>
@@ -69,7 +68,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
                 </Link>
                 <Link
                   href="/signup"
-                  className="px-4 py-2 text-sm font-medium bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm"
+                  className="px-4 py-2 text-sm font-medium bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-colors shadow-sm"
                 >
                   S'inscrire
                 </Link>
@@ -78,9 +77,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
           </div>
         </header>
       )}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">{children}</main>
+      <main className="container max-w-screen-2xl mx-auto px-4 md:px-8 py-8">{children}</main>
     </div>
   );
 }
-
-

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useToast } from '@/components/ui/Toaster';
 import type {
   Tech,
   Complexity,
@@ -26,6 +27,7 @@ interface FlowCreationFormProps {
 
 export default function FlowCreationForm({ initialData, systems: initialSystems, onSave }: FlowCreationFormProps) {
   const router = useRouter();
+  const { showSuccess, showError, showInfo } = useToast();
   const [systems, setSystems] = useState<System[]>(initialSystems || []);
   const [selectedSystemIds, setSelectedSystemIds] = useState<string[]>([]);
   const [formData, setFormData] = useState({
@@ -54,7 +56,6 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
 
   const [result, setResult] = useState<CalculationResult | null>(null);
   const [saving, setSaving] = useState(false);
-  const [saveMessage, setSaveMessage] = useState<string | null>(null);
 
   // Charger les systèmes si non fournis
   useEffect(() => {
@@ -79,7 +80,7 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
       try {
         const flowData = JSON.parse(pendingFlow);
         setFormData(flowData);
-        
+
         const pseudoFlow: Flow = {
           ...flowData,
           id: 'temp',
@@ -96,7 +97,7 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
         }).then(async (response) => {
           if (response.ok) {
             localStorage.removeItem('pending_flow');
-            setSaveMessage('Votre flux en attente a été sauvegardé avec succès !');
+            showSuccess('Votre flux en attente a été sauvegardé avec succès !');
             setTimeout(() => {
               router.push('/flows');
             }, 2000);
@@ -115,7 +116,6 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
 
   const handleEstimate = (e: React.FormEvent) => {
     e.preventDefault();
-    setSaveMessage(null);
 
     const pseudoFlow: Flow = {
       id: 'temp',
@@ -155,10 +155,8 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
   };
 
   const handleSave = async () => {
-    setSaveMessage(null);
-
     if (!result) {
-      setSaveMessage("Calculez d'abord une estimation avant de sauvegarder.");
+      showError("Calculez d'abord une estimation avant de sauvegarder.");
       return;
     }
 
@@ -177,9 +175,7 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
 
       if (response.status === 401) {
         localStorage.setItem('pending_flow', JSON.stringify(formData));
-        setSaveMessage(
-          'Vous devez vous connecter ou vous inscrire pour sauvegarder ce chiffrage. Redirection en cours...',
-        );
+        showInfo('Vous devez vous connecter pour sauvegarder ce chiffrage. Redirection en cours...');
         setTimeout(() => {
           const returnTo = encodeURIComponent('/flows/new');
           router.push(`/login?returnTo=${returnTo}`);
@@ -192,7 +188,7 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
         throw new Error(data.error || 'Erreur lors de la sauvegarde');
       }
 
-      setSaveMessage('Chiffrage sauvegardé dans votre espace. Vous pouvez le retrouver dans vos flux.');
+      showSuccess('Chiffrage sauvegardé avec succès');
       if (onSave) {
         onSave();
       }
@@ -200,7 +196,7 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
         router.push('/flows');
       }, 2000);
     } catch (error) {
-      setSaveMessage(
+      showError(
         error instanceof Error ? error.message : 'Une erreur est survenue lors de la sauvegarde.',
       );
     } finally {
@@ -610,7 +606,7 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
           <div className="mt-6 flex items-center justify-between">
             <button
               type="submit"
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 shadow-sm transition-colors font-medium"
+              className="px-6 py-2 bg-action text-action-foreground rounded-lg hover:bg-action/90 shadow-sm transition-colors font-medium"
             >
               Calculer l'estimation
             </button>
@@ -623,10 +619,6 @@ export default function FlowCreationForm({ initialData, systems: initialSystems,
               {saving ? 'Sauvegarde...' : 'Sauvegarder ce chiffrage'}
             </button>
           </div>
-
-          {saveMessage && (
-            <p className="mt-3 text-sm text-muted-foreground">{saveMessage}</p>
-          )}
         </form>
       </section>
 

@@ -1,7 +1,10 @@
 'use client';
 
 import Link from 'next/link';
-import { HiCalculator, HiChartBar, HiDocumentText, HiShieldCheck, HiFolder, HiServer, HiArrowRight } from 'react-icons/hi2';
+import { HiFolder, HiServer, HiCalculator, HiArrowRight } from 'react-icons/hi2';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 interface LandingPageProps {
   isAuthenticated: boolean;
@@ -9,281 +12,144 @@ interface LandingPageProps {
 
 export default function LandingPage({ isAuthenticated }: LandingPageProps) {
   return (
-    <div className="min-h-screen bg-muted/10">
+    <div className="flex flex-col min-h-screen">
       {/* Hero Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
-        <div className="text-center">
-          <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6">
-            Ave Abacus !
-            <span className="block text-3xl md:text-4xl mt-3 text-muted-foreground">
-              Création d'abaques pour flux de données
-            </span>
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
-            Estimez la charge de vos flux de données avec des abaques tirés du monde professionnel.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/projects"
-              className="px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-lg font-medium text-lg"
-            >
-              Découvrir l'outil
-            </Link>
-            <Link
-              href="/signup"
-              className="px-8 py-4 border-2 border-primary text-primary rounded-lg hover:bg-primary/10 transition-colors font-medium text-lg"
-            >
-              S'inscrire
-            </Link>
+      <section className="relative py-24 md:py-32 overflow-hidden">
+        <div className="container px-4 md:px-6 relative z-10">
+          <div className="flex flex-col items-center text-center space-y-8 max-w-3xl mx-auto">
+            <Badge variant="secondary" className="px-3 py-1 text-sm font-medium rounded-full">
+              v1.0 Maintenant Disponible
+            </Badge>
+
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight text-foreground">
+              Maîtrisez vos flux de données avec <span className="text-primary">précision</span>
+            </h1>
+
+            <p className="text-xl text-muted-foreground leading-relaxed max-w-[42rem]">
+              Abacus est l&apos;outil de référence pour estimer, structurer et visualiser la charge de vos systèmes d&apos;information. Conçu pour les architectes exigeants.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
+              <Button asChild size="lg" className="h-12 px-8 text-base">
+                <Link href="/projects">
+                  Découvrir l&apos;outil <HiArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="outline" size="lg" className="h-12 px-8 text-base">
+                <Link href="/signup">
+                  Créer un compte
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
+
+        {/* Background Gradient */}
+        <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-50 dark:bg-[radial-gradient(#1f2937_1px,transparent_1px)]"></div>
       </section>
 
-      {/* Projets Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
-        <div className="bg-card rounded-xl shadow-sm p-8 md:p-10 border border-border">
-          <div className="flex items-center space-x-4 mb-8">
-            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-              <HiFolder className="w-8 h-8 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">1. Projets</h2>
-              <p className="text-muted-foreground text-lg">Organisez vos systèmes et flux par projet</p>
-            </div>
-          </div>
-          
-          {isAuthenticated ? (
-            <div className="space-y-6">
-              <p className="text-muted-foreground text-base leading-relaxed">
-                Les projets vous permettent de regrouper vos systèmes et flux de données pour une meilleure organisation.
-                Créez un projet pour commencer à structurer vos estimations.
-              </p>
-              <Link
-                href="/projects"
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium"
-              >
-                <span>Accéder aux projets</span>
-                <HiArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-8">
-              <div className="bg-muted/50 rounded-lg p-6 md:p-8 border border-border">
-                <h3 className="text-xl font-semibold text-foreground mb-6">Fonctionnement d'un projet</h3>
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">1</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1"></h4>
-                      <p className="text-muted-foreground leading-relaxed">
-                        Les projets servent de conteneurs pour organiser vos systèmes et flux.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">2</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1"></h4>
-                      <p className="text-muted-foreground leading-relaxed">
-                        Chaque projet peut contenir un ou plusieurs systèmes et autant de flux que nécessaire.
-                        <br />Par exemple : création d'un projet "modernisation du SI".
-                      </p>
-                    </div>
-                  </div>
+      {/* Features Grid */}
+      <section className="py-16 md:py-24 bg-muted/30 border-y border-border/50">
+        <div className="container px-4 md:px-6">
+          <div className="grid gap-8 md:grid-cols-3">
+            {/* Projets */}
+            <Card className="bg-background/60 backdrop-blur-sm border-border/50 hover:border-primary/20 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 text-primary">
+                  <HiFolder className="w-6 h-6" />
                 </div>
-              </div>
-              <div className="flex items-center space-x-4 text-sm text-muted-foreground bg-primary/5 rounded-lg p-4 border border-primary/10">
-                <span className="text-lg">💡</span>
-                <span>Connectez-vous pour accéder à la page Projets et commencer à créer vos projets</span>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
+                <CardTitle>Projets Structurés</CardTitle>
+                <CardDescription>
+                  Organisez vos estimations par domaine ou client. Gardez une vue d&apos;ensemble claire de votre portefeuille.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {isAuthenticated ? (
+                  <Button variant="link" asChild className="p-0 h-auto font-semibold text-primary">
+                    <Link href="/projects">Accéder aux projets &rarr;</Link>
+                  </Button>
+                ) : (
+                  <ul className="space-y-2 text-sm text-muted-foreground">
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                      Organisation hiérarchique
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                      Vision globale du SI
+                    </li>
+                  </ul>
+                )}
+              </CardContent>
+            </Card>
 
-      {/* Systèmes Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
-        <div className="bg-card rounded-xl shadow-sm p-8 md:p-10 border border-border">
-          <div className="flex items-center space-x-4 mb-8">
-            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-              <HiServer className="w-8 h-8 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">2. Systèmes</h2>
-              <p className="text-muted-foreground text-lg">Gérez vos systèmes sources et cibles</p>
-            </div>
-          </div>
-          
-          {isAuthenticated ? (
-            <div className="space-y-6">
-              <p className="text-muted-foreground text-base leading-relaxed">
-                Les systèmes représentent les applications ou services qui sont sources ou cibles de vos flux de données.
-                Créez et gérez vos systèmes pour les associer à vos flux.
-              </p>
-              <Link
-                href="/systems"
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium"
-              >
-                <span>Accéder aux systèmes</span>
-                <HiArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-8">
-              <div className="bg-muted/50 rounded-lg p-6 md:p-8 border border-border">
-                <h3 className="text-xl font-semibold text-foreground mb-6">Fonctionnement d'un système</h3>
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">1</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1"></h4>
-                      <p className="text-muted-foreground leading-relaxed">
-                        Les systèmes représentent les applications ou services qui sont sources ou cibles de vos flux de données.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">2</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1"></h4>
-                      <p className="text-muted-foreground leading-relaxed">
-                        Les systèmes peuvent être associés à un ou plusieurs projets.
-                        Cela permet de visualiser l'ensemble des systèmes liés à un projet. 
-                        <br />Par exemple : un système CRM "Salesforce" et un système ERP "SAP", pourront être associés au projet "modernisation du SI".
-                      </p>
-                    </div>
-                  </div>
+            {/* Systèmes */}
+            <Card className="bg-background/60 backdrop-blur-sm border-border/50 hover:border-primary/20 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-blue-500/10 flex items-center justify-center mb-4 text-blue-500">
+                  <HiServer className="w-6 h-6" />
                 </div>
-              </div>
-              <div className="flex items-center space-x-4 text-sm text-muted-foreground bg-primary/5 rounded-lg p-4 border border-primary/10">
-                <span className="text-lg">💡</span>
-                <span>Connectez-vous pour accéder à la page Systèmes et commencer à créer vos systèmes</span>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
+                <CardTitle>Systèmes & Interfaces</CardTitle>
+                <CardDescription>
+                  Modélisez vos applications et leurs points d&apos;entrée/sortie. Définissez les contraintes techniques.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                    Catalogue de systèmes
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-blue-500" />
+                    Définition des interfaces
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
 
-      {/* Flux Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-10">
-        <div className="bg-card rounded-xl shadow-sm p-8 md:p-10 border border-border">
-          <div className="flex items-center space-x-4 mb-8">
-            <div className="w-16 h-16 bg-primary/10 rounded-lg flex items-center justify-center shrink-0">
-              <HiCalculator className="w-8 h-8 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">3. Flux</h2>
-              <p className="text-muted-foreground text-lg">Calculez la charge de vos flux de données</p>
-            </div>
-          </div>
-          
-          {isAuthenticated ? (
-            <div className="space-y-6">
-              <p className="text-muted-foreground text-base leading-relaxed">
-                Les flux représentent vos transformations de données ETL. Créez un flux, renseignez ses paramètres
-                (technologie, complexité, volumes, etc.) et obtenez une estimation en jours-homme.
-              </p>
-              <Link
-                href="/flows"
-                className="inline-flex items-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium"
-              >
-                <span>Accéder aux flux</span>
-                <HiArrowRight className="w-5 h-5" />
-              </Link>
-            </div>
-          ) : (
-            <div className="space-y-8">
-              <div className="bg-muted/50 rounded-lg p-6 md:p-8 border border-border">
-                <h3 className="text-xl font-semibold text-foreground mb-6">Fonctionnement d'un flux</h3>
-                <div className="space-y-6">
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">1</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1"></h4>
-                      <p className="text-muted-foreground leading-relaxed">
-                        Les flux de données représentent le code créé pour transformer les données d'un système source vers un système cible. 
-                        <br />La forme de chaque flux (ETL, ESB, API, Services) est unique et la granularité est définie au cas par cas.
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-4">
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-primary font-bold text-sm">2</span>
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-foreground mb-1"></h4>
-                      <p className="text-muted-foreground leading-relaxed">
-                        Les flux peuvent être associés à un ou plusieurs systèmes / interfaces d'un projet.
-                        <br />Par exemple : un flux ETL reliant le CRM "Salesforce" et l'ERP "SAP", pourra être associé à ces 2 systèmes.
-                      </p>
-                    </div>
-                  </div>
+            {/* Flux */}
+            <Card className="bg-background/60 backdrop-blur-sm border-border/50 hover:border-primary/20 transition-colors">
+              <CardHeader>
+                <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center mb-4 text-emerald-500">
+                  <HiCalculator className="w-6 h-6" />
                 </div>
-              </div>
-              <div className="flex items-center space-x-4 text-sm text-muted-foreground bg-primary/5 rounded-lg p-4 border border-primary/10">
-                <span className="text-lg">💡</span>
-                <span>Connectez-vous pour accéder à la page Flux et commencer à créer vos flux</span>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Benefits Section */}
-      <section className="bg-card border-t border-border py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground text-center mb-12 md:mb-16">
-            Pourquoi utiliser Abacus ?
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12">
-            <div className="space-y-3">
-              <h3 className="text-xl font-semibold text-foreground">Rapide et précis</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Obtenez une estimation fiable grâce à des abaques éprouvés basés sur des années d'expérience.
-              </p>
-            </div>
-            <div className="space-y-3">
-              <h3 className="text-xl font-semibold text-foreground">Multi-technologies</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Support de Talend et Blueway. Autres technologies à venir...
-              </p>
-            </div>
-            <div className="space-y-3">
-              <h3 className="text-xl font-semibold text-foreground">Organisation flexible</h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Découpez vos flux par interfaces et projets, suivez vos estimations, réutilisez vos flux et exportez vos
-                données.
-              </p>
-            </div>
+                <CardTitle>Estimation de Flux</CardTitle>
+                <CardDescription>
+                  Calculez la charge, le volume et la complexité. Obtenez des métriques précises pour vos dimensionnements.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ul className="space-y-2 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    Calcul de charge précis
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                    Abaques pré-configurés
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* CTA Section */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-        <div className="bg-primary/10 rounded-2xl p-10 md:p-14 text-center border border-primary/20">
-          <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4 md:mb-6">
-            Intriguer ?
-          </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 md:mb-10">
-            Essayez l'outil en démonstration
-          </p>
-          <Link
-            href="/projects"
-            className="inline-block px-8 py-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-lg font-medium text-lg"
-          >
-            Découvrir l'outil
-          </Link>
+      <section className="py-24">
+        <div className="container px-4 md:px-6">
+          <div className="bg-primary/5 rounded-3xl p-8 md:p-16 text-center border border-primary/10">
+            <h2 className="text-3xl font-bold tracking-tight mb-4">Prêt à optimiser vos architectures ?</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-8 text-lg">
+              Rejoignez les architectes qui utilisent Abacus pour sécuriser leurs dimensionnements.
+            </p>
+            <Button asChild size="lg" className="h-12 px-8">
+              <Link href="/signup">
+                Commencer gratuitement
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
     </div>

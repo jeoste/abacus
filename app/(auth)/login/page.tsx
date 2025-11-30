@@ -30,11 +30,11 @@ function LoginForm() {
       // Gérer les erreurs de connexion
       // Note: Si la vérification d'email est désactivée dans Supabase, 
       // les erreurs liées à la confirmation seront ignorées
-      if (error.message.includes('Invalid login credentials') || 
-          error.message.includes('Invalid credentials')) {
+      if (error.message.includes('Invalid login credentials') ||
+        error.message.includes('Invalid credentials')) {
         setError('Email ou mot de passe incorrect. Vérifiez vos identifiants ou créez un compte.');
-      } else if (error.message.includes('Email not confirmed') || 
-                 (error.message.includes('email') && error.message.includes('confirm'))) {
+      } else if (error.message.includes('Email not confirmed') ||
+        (error.message.includes('email') && error.message.includes('confirm'))) {
         // Si la vérification d'email est requise par Supabase, on affiche un message
         // Sinon, cette erreur ne devrait pas apparaître si la vérification est désactivée
         setError('Votre email n\'a pas encore été validé. Si la vérification d\'email est désactivée, contactez le support.');
@@ -119,7 +119,7 @@ function LoginForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-primary text-primary-foreground py-2 px-4 rounded-lg hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm font-medium"
+        className="w-full bg-action text-action-foreground py-2 px-4 rounded-lg hover:bg-action/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-sm font-medium"
       >
         {loading ? 'Connexion...' : 'Se connecter'}
       </button>

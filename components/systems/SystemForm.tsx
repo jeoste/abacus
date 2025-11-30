@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { useToast } from '@/components/ui/Toaster';
 import type { System, Project } from '@/lib/types';
 
 interface SystemFormProps {
@@ -13,9 +14,9 @@ export default function SystemForm({ system, projects }: SystemFormProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const projectIdParam = searchParams.get('project_id');
-  
+  const { showSuccess, showError } = useToast();
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: system?.name || '',
     description: system?.description || '',
@@ -25,7 +26,6 @@ export default function SystemForm({ system, projects }: SystemFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
 
     // project_id est maintenant optionnel, pas besoin de vérification
 
@@ -46,22 +46,17 @@ export default function SystemForm({ system, projects }: SystemFormProps) {
         throw new Error(data.error || 'Erreur lors de la sauvegarde');
       }
 
+      showSuccess(system ? 'Système modifié avec succès' : 'Système créé avec succès');
       router.push('/systems');
       router.refresh();
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Une erreur est survenue');
+      showError(err instanceof Error ? err.message : 'Une erreur est survenue');
       setLoading(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-destructive/10 border border-destructive/20 text-destructive px-4 py-3 rounded-lg">
-          {error}
-        </div>
-      )}
-
       <div>
         <label htmlFor="project_id" className="block text-sm font-medium text-foreground mb-2">
           Projet (optionnel)
@@ -125,7 +120,7 @@ export default function SystemForm({ system, projects }: SystemFormProps) {
         <button
           type="submit"
           disabled={loading}
-          className="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium disabled:opacity-50"
+          className="px-6 py-2 bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-colors shadow-sm font-medium disabled:opacity-50"
         >
           {loading ? 'Enregistrement...' : system ? 'Mettre à jour' : 'Créer'}
         </button>

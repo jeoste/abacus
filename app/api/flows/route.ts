@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { CostCalculator } from '@/lib/calculator/costCalculator';
 import { ensureUserProfile } from '@/lib/supabase/ensure-profile';
 
@@ -46,7 +47,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const supabase = await createClient();
-    
+
     // Vérifier l'authentification de manière stricte
     const {
       data: { user },
@@ -63,14 +64,14 @@ export async function POST(request: Request) {
 
     const body = await request.json();
     const calculator = new CostCalculator();
-    
+
     // Calculer l'estimation
     const calculation = calculator.calculateCost(body as any);
     body.estimated_days = calculation.totalCost;
 
     // Extraire system_ids du body (peut être un tableau ou un seul ID pour compatibilité)
     const { user_id, system_ids, interface_id, ...safeBody } = body;
-    
+
     // Gérer la compatibilité : si interface_id est fourni, le convertir en system_ids
     let systemsToLink: string[] = [];
     if (system_ids && Array.isArray(system_ids)) {
@@ -153,6 +154,7 @@ export async function POST(request: Request) {
       .eq('id', flow.id)
       .single();
 
+    revalidatePath('/flows');
     return NextResponse.json(flowWithSystems || flow);
   } catch (error) {
     return NextResponse.json(

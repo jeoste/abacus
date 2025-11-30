@@ -1,11 +1,13 @@
 import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
+import { revalidatePath } from 'next/cache';
 import { CostCalculator } from '@/lib/calculator/costCalculator';
 
 export async function GET(
   request: Request,
   { params }: { params: { id: string } }
 ) {
+  // ... (unchanged)
   const supabase = await createClient();
   const {
     data: { user },
@@ -20,23 +22,23 @@ export async function GET(
   }
 
   const { data, error } = await supabase
-      .from('flows')
-      .select(`
+    .from('flows')
+    .select(`
         *,
         flows_systems (
           system_id,
           systems (*)
         )
       `)
-      .eq('id', params.id)
-      .eq('user_id', user.id)
-      .single();
+    .eq('id', params.id)
+    .eq('user_id', user.id)
+    .single();
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
 
-    return NextResponse.json(data);
+  return NextResponse.json(data);
 }
 
 export async function PUT(
@@ -58,10 +60,10 @@ export async function PUT(
 
   const body = await request.json();
   const calculator = new CostCalculator();
-  
+
   // Extraire system_ids du body
   const { user_id, system_ids, interface_id, ...safeBody } = body;
-  
+
   // Gérer la compatibilité : si interface_id est fourni, le convertir en system_ids
   let systemsToLink: string[] = [];
   if (system_ids && Array.isArray(system_ids)) {
@@ -144,6 +146,7 @@ export async function PUT(
     .eq('id', params.id)
     .single();
 
+  revalidatePath('/flows');
   return NextResponse.json(flowWithSystems || data);
 }
 
@@ -174,6 +177,7 @@ export async function DELETE(
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  revalidatePath('/flows');
   return NextResponse.json({ success: true });
 }
 

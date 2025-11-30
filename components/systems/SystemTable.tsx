@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useToast } from '@/components/ui/Toaster';
 import type { System, Flow } from '@/lib/types';
 
 interface SystemTableProps {
@@ -11,6 +12,8 @@ interface SystemTableProps {
 }
 
 export default function SystemTable({ systems, flows, projects = [], isDemo = false }: SystemTableProps) {
+  const { showSuccess, showError } = useToast();
+
   const getFlowCount = (systemId: string) => {
     // Compter les flux qui ont ce système dans flows_systems
     return flows.filter((flow: any) => {
@@ -24,14 +27,19 @@ export default function SystemTable({ systems, flows, projects = [], isDemo = fa
       return;
     }
 
-    const response = await fetch(`/api/systems/${id}`, {
-      method: 'DELETE',
-    });
+    try {
+      const response = await fetch(`/api/systems/${id}`, {
+        method: 'DELETE',
+      });
 
-    if (response.ok) {
-      window.location.reload();
-    } else {
-      alert('Erreur lors de la suppression');
+      if (response.ok) {
+        showSuccess('Système supprimé avec succès');
+        window.location.reload();
+      } else {
+        throw new Error('Erreur lors de la suppression');
+      }
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Erreur lors de la suppression');
     }
   };
 

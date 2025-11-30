@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useToast } from '@/components/ui/Toaster';
 import type { Interface, Flow } from '@/lib/types';
 
 interface InterfaceTableProps {
@@ -9,6 +10,8 @@ interface InterfaceTableProps {
 }
 
 export default function InterfaceTable({ interfaces, flows }: InterfaceTableProps) {
+  const { showSuccess, showError } = useToast();
+
   const getFlowCount = (interfaceId: string) => {
     return flows.filter((flow) => flow.interface_id === interfaceId).length;
   };
@@ -18,14 +21,19 @@ export default function InterfaceTable({ interfaces, flows }: InterfaceTableProp
       return;
     }
 
-    const response = await fetch(`/api/interfaces/${id}`, {
-      method: 'DELETE',
-    });
+    try {
+      const response = await fetch(`/api/interfaces/${id}`, {
+        method: 'DELETE',
+      });
 
-    if (response.ok) {
-      window.location.reload();
-    } else {
-      alert('Erreur lors de la suppression');
+      if (response.ok) {
+        showSuccess('Interface supprimée avec succès');
+        window.location.reload();
+      } else {
+        throw new Error('Erreur lors de la suppression');
+      }
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Erreur lors de la suppression');
     }
   };
 
