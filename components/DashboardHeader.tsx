@@ -40,9 +40,14 @@ export default function DashboardHeader({ email, fullName }: DashboardHeaderProp
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2 transition-opacity hover:opacity-80">
             <Logo size={28} showText={false} />
-            <span className="text-lg font-semibold tracking-tight text-foreground hidden sm:inline-block">
-              Abacus
-            </span>
+            <div className="flex flex-col">
+              <span className="text-lg font-semibold tracking-tight text-foreground hidden sm:inline-block">
+                Abacus
+              </span>
+              <span className="text-xs text-muted-foreground hidden sm:inline-block">
+                v1.0.0
+              </span>
+            </div>
           </Link>
 
           <nav className="flex items-center gap-1">

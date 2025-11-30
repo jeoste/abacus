@@ -51,9 +51,14 @@ export default function HomePage() {
             <div className="flex items-center gap-8 min-w-0">
               <Link href="/" className="flex items-center space-x-3 shrink-0">
                 <Logo showText={false} />
-                <span className="text-xl font-bold text-foreground hidden sm:inline">
-                  Abacus
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-xl font-bold text-foreground hidden sm:inline">
+                    Abacus
+                  </span>
+                  <span className="text-xs text-muted-foreground hidden sm:inline">
+                    v1.0.0
+                  </span>
+                </div>
               </Link>
 
               <nav className="flex items-center gap-2 text-sm font-medium">
