@@ -24,7 +24,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!confirm(`Êtes-vous sûr de vouloir supprimer le projet "${project.name}" ?\n\nLes systèmes et flux associés seront déliés du projet mais ne seront pas supprimés.`)) {
+    if (!confirm(`Êtes-vous sûr de vouloir supprimer le projet "${project.name}" ?\n\nLes systèmes et flux associés ne seront pas supprimés.`)) {
       return;
     }
 
