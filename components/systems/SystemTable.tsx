@@ -38,13 +38,7 @@ export default function SystemTable({ systems, flows, projects = [], isDemo = fa
   if (systems.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground mb-4">Aucun système créé</p>
-        <Link
-          href="/systems/new"
-          className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium"
-        >
-          Créer votre premier système
-        </Link>
+        <p className="text-muted-foreground">Aucun système créé</p>
       </div>
     );
   }

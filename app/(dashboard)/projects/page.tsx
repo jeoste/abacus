@@ -20,7 +20,7 @@ export default async function ProjectsPage() {
   } = await supabase.auth.getUser();
 
   const isDemo = !user;
-  
+
   let projects = null;
   if (!isDemo) {
     const { data: userProjects } = await supabase
@@ -50,7 +50,7 @@ export default async function ProjectsPage() {
               <p className="text-muted-foreground">Organisez vos systèmes et flux par projet</p>
             </div>
           </div>
-          
+
           <div className="space-y-8">
             <div className="bg-muted/50 rounded-lg p-6 md:p-8 border border-border">
               <h3 className="text-xl font-semibold text-foreground mb-6">Fonctionnement d'un projet</h3>
@@ -96,7 +96,7 @@ export default async function ProjectsPage() {
           </div>
           <Link
             href="/projects/new"
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium flex items-center space-x-2"
+            className="px-4 py-2 bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-all duration-200 shadow-sm font-medium flex items-center space-x-2"
           >
             <HiPlus className="w-5 h-5" />
             <span>Nouveau projet</span>
@@ -138,7 +138,7 @@ export default async function ProjectsPage() {
                 </div>
               );
             }
-            
+
             return <ProjectCard key={project.id} project={project} />;
           })}
         </div>
@@ -152,7 +152,7 @@ export default async function ProjectsPage() {
           {!isDemo && (
             <Link
               href="/projects/new"
-              className="inline-block px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium"
+              className="inline-block px-6 py-3 bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-all duration-200 shadow-sm font-medium"
             >
               Créer un projet
             </Link>

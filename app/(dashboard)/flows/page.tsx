@@ -51,10 +51,10 @@ export default async function FlowsPage() {
   } = await supabase.auth.getUser();
 
   const isDemo = !user;
-  
+
   let flows = null;
   let systems = null;
-  
+
   if (!isDemo) {
     const { data: userFlows } = await supabase
       .from('flows')
@@ -95,7 +95,7 @@ export default async function FlowsPage() {
               <p className="text-muted-foreground">Calculez la charge de vos flux de données</p>
             </div>
           </div>
-          
+
           <div className="space-y-8">
             <div className="bg-muted/50 rounded-lg p-6 md:p-8 border border-border">
               <h3 className="text-xl font-semibold text-foreground mb-6">Fonctionnement d'un flux</h3>
@@ -107,7 +107,7 @@ export default async function FlowsPage() {
                   <div>
                     <h4 className="font-semibold text-foreground mb-1"></h4>
                     <p className="text-muted-foreground leading-relaxed">
-                      Les flux de données représentent le code créé pour transformer les données d'un système source vers un système cible. 
+                      Les flux de données représentent le code créé pour transformer les données d'un système source vers un système cible.
                       <br />La forme de chaque flux (ETL, ESB, API, Services) est unique et la granularité est définie au cas par cas.
                     </p>
                   </div>
@@ -171,7 +171,7 @@ export default async function FlowsPage() {
               </Link>
               <Link
                 href="/flows/new"
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium"
+                className="px-4 py-2 bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-all duration-200 shadow-sm font-medium"
               >
                 + Nouveau flux
               </Link>

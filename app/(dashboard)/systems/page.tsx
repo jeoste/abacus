@@ -41,12 +41,12 @@ export default async function SystemsPage() {
   } = await supabase.auth.getUser();
 
   const isDemo = !user;
-  
+
   let systems = null;
   let flows = null;
-  
+
   let projects = null;
-  
+
   if (!isDemo) {
     const { data: userSystems } = await supabase
       .from('systems')
@@ -56,7 +56,7 @@ export default async function SystemsPage() {
       `)
       .eq('user_id', user.id)
       .order('created_at', { ascending: false });
-    
+
     // Normaliser les résultats (Supabase peut retourner projects comme tableau ou objet)
     systems = (userSystems || []).map((sys: any) => ({
       ...sys,
@@ -100,7 +100,7 @@ export default async function SystemsPage() {
               <p className="text-muted-foreground">Gérez vos systèmes sources et cibles</p>
             </div>
           </div>
-          
+
           <div className="space-y-8">
             <div className="bg-muted/50 rounded-lg p-6 md:p-8 border border-border">
               <h3 className="text-xl font-semibold text-foreground mb-6">Fonctionnement d'un système</h3>
@@ -124,7 +124,7 @@ export default async function SystemsPage() {
                     <h4 className="font-semibold text-foreground mb-1"></h4>
                     <p className="text-muted-foreground leading-relaxed">
                       Les systèmes peuvent être associés à un ou plusieurs projets.
-                      Cela permet de visualiser l'ensemble des systèmes liés à un projet. 
+                      Cela permet de visualiser l'ensemble des systèmes liés à un projet.
                       <br />Par exemple : un système CRM "Salesforce" et un système ERP "SAP", pourront être associés au projet "modernisation du SI".
                     </p>
                   </div>
@@ -160,7 +160,7 @@ export default async function SystemsPage() {
           <div className="flex justify-end mb-6">
             <Link
               href="/systems/new"
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium"
+              className="px-4 py-2 bg-action text-action-foreground rounded-lg hover:bg-action/90 transition-all duration-200 shadow-sm font-medium"
             >
               + Nouveau système
             </Link>

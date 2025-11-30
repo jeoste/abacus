@@ -52,15 +52,15 @@ export default function ProjectCard({ project }: ProjectCardProps) {
   const systemsCount = project.systems?.length || 0;
 
   return (
-    <div className="bg-card rounded-xl shadow-sm p-6 border border-border hover:shadow-md transition-shadow relative group">
+    <div className="bg-card rounded-xl shadow-sm p-6 border border-border hover:shadow-lg hover:scale-[1.02] transition-all duration-300 relative group">
       <div className="flex items-start justify-between mb-4">
-        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center">
+        <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center group-hover:bg-primary/15 transition-colors">
           <HiFolder className="w-6 h-6 text-primary" />
         </div>
         <button
           onClick={handleDelete}
           disabled={isDeleting}
-          className="opacity-0 group-hover:opacity-100 transition-opacity p-2 text-destructive hover:bg-destructive/10 rounded-lg disabled:opacity-50 z-10 relative"
+          className="opacity-0 group-hover:opacity-100 transition-all duration-200 p-2 text-destructive hover:bg-destructive/10 rounded-lg disabled:opacity-50 z-10 relative hover:scale-110"
           aria-label="Supprimer le projet"
           title="Supprimer le projet"
           type="button"
@@ -68,7 +68,7 @@ export default function ProjectCard({ project }: ProjectCardProps) {
           <HiTrash className="w-4 h-4" />
         </button>
       </div>
-      <Link 
+      <Link
         href={`/projects/${project.id}`}
         className="block"
         onClick={(e) => {

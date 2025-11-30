@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { HiUser } from 'react-icons/hi2';
 import { createClient } from '@/lib/supabase/client';
 
 interface UserInfoProps {
@@ -41,21 +42,15 @@ export default function UserInfo({ email, fullName }: UserInfoProps) {
   }
 
   const displayName = userName || userEmail.split('@')[0];
-  const initials = displayName
-    .split(' ')
-    .filter(Boolean)
-    .map((part) => part[0]?.toUpperCase())
-    .join('')
-    .slice(0, 2) || userEmail[0]?.toUpperCase() || '?';
 
   return (
     <Link
       href="/profile"
-      className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-primary/10 text-primary font-semibold border border-border hover:bg-primary/20 transition-colors"
+      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-primary/10 text-primary border border-border hover:bg-primary/20 hover:scale-105 transition-all duration-200"
       aria-label="Voir le profil"
       title={displayName}
     >
-      <span>{initials}</span>
+      <HiUser className="w-5 h-5" />
     </Link>
   );
 }

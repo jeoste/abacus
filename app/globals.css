@@ -25,6 +25,9 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
 
+  --color-action: var(--action);
+  --color-action-foreground: var(--action-foreground);
+
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
 
@@ -52,7 +55,7 @@
   --popover-foreground: oklch(0.129 0.042 264.695);
 
   /* Primary: Deep Blue/Slate - Trustworthy & Professional */
-  --primary: oklch(0.208 0.042 265.755); 
+  --primary: oklch(0.208 0.042 265.755);
   --primary-foreground: oklch(0.985 0 0);
 
   /* Secondary: Subtle Grey for less important actions */
@@ -64,6 +67,10 @@
 
   --accent: oklch(0.968 0.007 247.896);
   --accent-foreground: oklch(0.208 0.042 265.755);
+
+  /* Action: Dark Green for action buttons (Create, Submit, etc.) */
+  --action: oklch(0.45 0.15 150);
+  --action-foreground: oklch(0.985 0 0);
 
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
@@ -102,6 +109,10 @@
   --accent: oklch(0.30 0 0);
   --accent-foreground: oklch(0.95 0 0);
 
+  /* Action: Lighter green for dark mode */
+  --action: oklch(0.55 0.15 150);
+  --action-foreground: oklch(0.95 0 0);
+
   --destructive: oklch(0.55 0.15 25);
   --destructive-foreground: oklch(0.95 0 0);
 
@@ -135,6 +146,7 @@ body {
     transform: translateX(100%);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -146,6 +158,7 @@ body {
     transform: translateX(0);
     opacity: 1;
   }
+
   to {
     transform: translateX(100%);
     opacity: 0;

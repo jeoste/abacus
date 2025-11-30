@@ -39,13 +39,7 @@ export default function FlowTable({ flows, systems, isDemo = false }: FlowTableP
   if (flows.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground mb-4">Aucun flux créé</p>
-        <Link
-          href="/flows/new"
-          className="inline-block px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors shadow-sm font-medium"
-        >
-          Créer votre premier flux
-        </Link>
+        <p className="text-muted-foreground">Aucun flux créé</p>
       </div>
     );
   }
@@ -107,13 +101,12 @@ export default function FlowTable({ flows, systems, isDemo = false }: FlowTableP
               </td>
               <td className="px-6 py-4 whitespace-nowrap">
                 <span
-                  className={`px-2 py-1 text-xs font-semibold rounded-full ${
-                    flow.complexity === 'simple'
+                  className={`px-2 py-1 text-xs font-semibold rounded-full ${flow.complexity === 'simple'
                       ? 'bg-secondary text-foreground'
                       : flow.complexity === 'modérée'
-                      ? 'bg-accent text-accent-foreground'
-                      : 'bg-destructive/10 text-destructive'
-                  }`}
+                        ? 'bg-accent text-accent-foreground'
+                        : 'bg-destructive/10 text-destructive'
+                    }`}
                 >
                   {flow.complexity}
                 </span>

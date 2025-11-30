@@ -13,7 +13,7 @@ export default function ThemeToggle() {
     const savedTheme = localStorage.getItem('theme');
     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const shouldBeDark = savedTheme === 'dark' || (!savedTheme && prefersDark);
-    
+
     setIsDark(shouldBeDark);
     if (shouldBeDark) {
       document.documentElement.classList.add('dark');
@@ -25,7 +25,7 @@ export default function ThemeToggle() {
   const toggleTheme = () => {
     const newIsDark = !isDark;
     setIsDark(newIsDark);
-    
+
     if (newIsDark) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
@@ -50,14 +50,14 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggleTheme}
-      className="w-10 h-10 rounded-lg border border-input bg-background flex items-center justify-center hover:bg-accent transition-colors"
+      className="w-10 h-10 rounded-lg border border-input bg-background flex items-center justify-center hover:bg-accent hover:scale-105 transition-all duration-200"
       aria-label={isDark ? 'Passer en mode clair' : 'Passer en mode sombre'}
       title={isDark ? 'Mode sombre' : 'Mode clair'}
     >
       {isDark ? (
-        <HiSun className="w-5 h-5 text-foreground" />
+        <HiSun className="w-5 h-5 text-foreground transition-transform duration-300 hover:rotate-180" />
       ) : (
-        <HiMoon className="w-5 h-5 text-foreground" />
+        <HiMoon className="w-5 h-5 text-foreground transition-transform duration-300 hover:-rotate-12" />
       )}
     </button>
   );
